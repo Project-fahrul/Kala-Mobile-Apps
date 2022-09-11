@@ -1,0 +1,6 @@
+{
+  "appId": "com.example.app",
+  "appName": "kalamobileapp",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

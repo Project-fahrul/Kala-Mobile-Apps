@@ -1,26 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <v-app>
+      <router-view />
+    </v-app>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  import {App} from "@capacitor/app"
+  import { Device } from '@capacitor/device';
+
+  export default {
+    async mounted() {
+      if((await Device.getInfo()).platform == "android"){
+        App.addListener("backButton", ()=>{
+          let n = this.$router.currentRoute.value.name
+          if(n == "Home" || n == "Onboarding"){
+            App.exitApp()
+          }else{
+            this.$router.back()
+          }
+        })
+      }
+    }
   }
-}
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
