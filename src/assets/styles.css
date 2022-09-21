@@ -1,7 +1,7 @@
 :root{
     --dark-color: #0250AE;
-    --primary-color: #1B78DF;
-    --notif: #91B8F0;
+    --primary-color: #198754;
+    --notif: rgb(160, 160, 160);
 }
 
 p{
@@ -27,13 +27,13 @@ nav.navbar{
     right: -400px;
     width: 70%;
     height: 100vh;
-    background-color: var(--primary-color);
+    background-color: #fff;
     box-shadow: -1px 2px 1px 1px rgba(95, 95, 95, 0.4);
     transition: all 300ms ease;
 }
 
 .sidebar button{
-    color: rgb(155, 155, 155) !important;
+    color: #fff !important;
     margin-left: auto;
     display: block;
     margin-right: 10px;
@@ -42,7 +42,7 @@ nav.navbar{
 .sidebar .wrapper{
     padding-top: 10px;
     height: 150px;
-    background-color: var(--dark-color);
+    background-color: var(--primary-color);
 }
 
 .sidebar p, .sidebar h1{
@@ -91,12 +91,12 @@ nav.navbar{
 }
 
 .sidebar .active .icon{
-    color: white;
+    color: var(--primary-color);
 } 
 
 .sidebar .active .action{
-    border-color: white;
-    color: white;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .sidebar li.logout{
@@ -117,6 +117,12 @@ nav.navbar{
     background-color: #E5EEEF;
     padding: 15px 10px;
     color: #9BA1AA;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sub span:last-child{
+    color: var(--primary-color);
 }
 
 .body .wrapper{
@@ -159,10 +165,27 @@ nav.navbar{
     justify-content: center;
     height: 100vh;
 }
+.greeting .img{
+    margin-bottom: 5px;
+}
+
+.greeting .img img{
+    margin: auto;
+}
 
 .login .greeting{
     text-align: center;
     margin-bottom: 20px;
+}
+
+.lupa{
+    display: flex;
+    justify-content: space-between;
+}
+
+.lupa a{
+    text-decoration: none;
+    color: rgb(110, 110, 110);
 }
 
 .greeting h1{
@@ -172,6 +195,8 @@ nav.navbar{
 .login button.log{
     width: 100%;
     display: inline-block;
+    background-color: var(--primary-color);
+    color: #fff;
 }
 
 .cus-wrap{
@@ -226,4 +251,26 @@ nav.navbar{
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.note{
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    color: rgb(110, 110, 110);
+}
+
+.aksi,.btn.aksi:first-child:active, .btn.aksi:first-child:hover{
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.action-btn button{
+    width: 100%;
+    text-align: start;
+}
+
+.simpan{
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: #fff;
 }

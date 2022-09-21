@@ -17,19 +17,19 @@
                         </div>
                         <div class="mb-3">
                             <p class="cus-attr">Tanggal DEC</p>
-                            <p class="cus-attr-val">{{customerData.tgl_dec}}</p>
+                            <p class="cus-attr-val">{{cvt(customerData.tgl_dec)}}</p>
                         </div>
                         <div class="mb-3">
                             <p class="cus-attr">Jatuh Tempo STNK</p>
-                            <p class="cus-attr-val">{{customerData.tgl_stnk}}</p>
+                            <p class="cus-attr-val">{{cvt(customerData.tgl_stnk)}}</p>
                         </div>
                         <div class="mb-3">
                             <p class="cus-attr">Tanggal Lahir</p>
-                            <p class="cus-attr-val">{{customerData.tgl_lahir}}</p>
+                            <p class="cus-attr-val">{{cvt(customerData.tgl_lahir)}}</p>
                         </div>
                         <div class="mb-3">
                             <p class="cus-attr">Tanggal Angsuran</p>
-                            <p class="cus-attr-val">{{customerData.tgl_angsuran}}</p>
+                            <p class="cus-attr-val">{{cvt(customerData.tgl_angsuran)}}</p>
                         </div>
                         <div class="mb-3">
                             <p class="cus-attr">No Rangka</p>
@@ -81,6 +81,11 @@ export default {
         customerData(){
             console.log(this.customer)
             return this.customer[0]
+        }
+    },
+    methods:{
+        cvt(d){
+            return new Date(d).toISOString().split('T')[0]
         }
     }
 }

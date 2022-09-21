@@ -1,8 +1,11 @@
 <template>
     <div class="container d-flex login">
         <div class="greeting">
-            <h1>Welcome</h1>
-            <p>Selamat datang di aplikasi Kala, Silahkan login.</p>
+            <div class="img">
+                <img class="d-block" src="../assets/logo.jpg" alt="kala">
+                <img class="d-block" src="../assets/logo1.jpg" alt="kala">
+            </div>
+            <p>Silahkan masuk ke akun anda</p>
         </div>
         <div  class="alert alert-danger alert-dismissible fade show" role="alert" v-if="alert === true">
             {{message}}
@@ -15,11 +18,14 @@
                     <input type="email" v-model="email" class="form-control" id="exampleInputEmail1" required aria-describedby="emailHelp">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <div class="lupa">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <router-link to="/forgot-password">Lupa password</router-link>
+                    </div>
                     <input type="password" v-model="password" class="form-control" id="exampleInputPassword1" required>
                 </div>
                 <div v-if="loading == false">
-                    <button type="submit" class="btn btn-primary log">Login</button>
+                    <button type="submit" class="btn log">Login</button>
                     <div class="mt-3">
                         <router-link to="/register" class="btn register">Register</router-link>
                     </div>

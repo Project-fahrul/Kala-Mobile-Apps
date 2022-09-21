@@ -3,8 +3,8 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Kala Apps</a>
-                <button class="navbar-toggler" type="button" @click="sidebar">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="btn" type="button" @click="sidebar">
+                    <font-awesome-icon icon="bars" style="color: #fff;"></font-awesome-icon>
                 </button>
             </div>
         </nav>

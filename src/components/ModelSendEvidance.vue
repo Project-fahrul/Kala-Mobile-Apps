@@ -96,20 +96,23 @@ export default {
             formData.append('sales_id', this.sales)
             formData.append('type', this.type)
 
+            this.model.toggle()
             if(!await api.uploadEvidance(formData)){
-                this.loading = false
-                return
+                
+                // return
             }
+            this.loading = false
             
             let newData = await api.listAllNotification()
-            if(newData.length == 0){
-                this.loading = false
-                return
+            if(newData == null ||newData.length == 0){
+                // return
+                newData = []
             }
 
+            this.loading = false
+            console.log("siniiiii");
             notifStorage.creator.notifications(newData)
             this.clear()
-            this.model.toggle()
             this.loading = false
 
         }
