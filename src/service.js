@@ -9,6 +9,21 @@ const instance = axios.create({
 });
 
 const api = {
+    async forgotPassword(email){
+        let res = true
+        let token = await vueCookie.get("token")
+        await instance.post("/user/forgot-password", {
+            email: email
+        },{
+            headers: {
+                "Authorization": token
+            }
+        }).catch(()=>{
+            res = false
+        })
+
+        return res
+    },
     async addCutomer(params){
         let token = await vueCookie.get("token")
         let ret = {

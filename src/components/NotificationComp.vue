@@ -13,6 +13,9 @@
                         <font-awesome-icon icon="arrow-right" class="icon" />
                     </button>
                 </div>
+                <div class="mt-3" v-if="notif == null">
+                    Belum ada evidance
+                </div>
             </div>
         </div>
     </div>

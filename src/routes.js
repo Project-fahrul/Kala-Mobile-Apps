@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from "vue-router"
 import DashboardPage from "./page/DashboardPage"
 import LoginPage from "./page/LoginPage.vue"
 import RegisterPage from "./page/RegisterPage.vue"
+import LupaPassword from "./page/LupaPage.vue";
 
 const route = [
     {
@@ -18,6 +19,11 @@ const route = [
         path: "/register",
         name: "Register",
         component: RegisterPage
+    },
+    {
+        path: "/forgot-password",
+        name: "lupa",
+        component: LupaPassword
     }
 ]
 
