@@ -34,24 +34,28 @@
 </template>
 
 <script>
+    import service from '@/service'
 import FooterComp from "./footerComp.vue"
 export default {
     data() {
         return {
             email: "",
-            password: "",
             alert: false,
             loading: false,
             message: "",
-            enterPswd: false,
-            step: 0
         };
     },
     methods: {
         async onSubmit() {
             this.alert = false;
             this.loading = true;
-            
+            let res = await service.forgotPassword(this.email)
+            if (!res){
+                this.loading = false
+                this.alert = true
+                this.message = "Terjadi kesalahan atau email tidak dikenal"
+                return   
+            }
             this.loading = false
             this.alert = true
             this.message = "Berhasil mengirim password sementara. Lihat email dan login kembali"

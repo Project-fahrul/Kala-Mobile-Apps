@@ -272,6 +272,10 @@ export default {
             }
         },
         async del(id){
+            let conf = await confirm("Ada yakin akan menghapus?")
+            if(!conf){
+                return
+            }
             await api.deleteCustomer(id)
             let data = await api.listCustomer(0)
 

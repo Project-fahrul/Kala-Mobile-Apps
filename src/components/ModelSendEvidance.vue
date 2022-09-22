@@ -66,6 +66,7 @@ export default {
     },
     methods: {
         clear(){
+            this.valid = true
             this.message = ""
             this.file = null
             this.imageKey++
@@ -96,11 +97,13 @@ export default {
             formData.append('sales_id', this.sales)
             formData.append('type', this.type)
 
-            this.model.toggle()
             if(!await api.uploadEvidance(formData)){
-                
-                // return
+                this.errorMessage = "Gagal mengirim, harap coba lagi"
+                this.valid = false
+                this.loading = false
+                return
             }
+            this.model.toggle()
             this.loading = false
             
             let newData = await api.listAllNotification()
@@ -110,12 +113,14 @@ export default {
             }
 
             this.loading = false
-            console.log("siniiiii");
             notifStorage.creator.notifications(newData)
             this.clear()
             this.loading = false
 
         }
+    },
+    mounted(){
+        this.valid = true
     },
     components: { ImagePicker }
 }

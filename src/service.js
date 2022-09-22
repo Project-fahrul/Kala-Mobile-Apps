@@ -75,10 +75,15 @@ const api = {
             email: email,
             password: password
         }).catch((e) => {
+            console.log(e);
+            if(!e.response.data){
+                ret.status = false
+                ret.message = e.message
+                return
+            }
             ret.status = false
             ret.message = e.response.data.message
         });
-
         if (data == undefined) {
             return ret
         }
