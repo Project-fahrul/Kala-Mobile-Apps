@@ -17,6 +17,7 @@
         </div>
     </div>
     <ModelSendEvidance :model="model" :name="name" :type="type" :sales="sales_id" :customer="customer_id"></ModelSendEvidance>
+    <FooterComp></FooterComp>
 </template>
 
 
@@ -25,9 +26,10 @@ import ModelSendEvidance from './ModelSendEvidance.vue';
 import bootstrap from "bootstrap/dist/js/bootstrap.min.js"
 import api from "../service";
 import notifStorage from "../storage/notificationStorage"
+import FooterComp from './footerComp.vue';
 
 export default {
-    components: { ModelSendEvidance },
+    components: { ModelSendEvidance, FooterComp },
     methods: {
         show: function (sales, customer, type, name) {
             this.model = new bootstrap.Modal(document.getElementById('myModal'), {

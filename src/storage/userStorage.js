@@ -1,7 +1,8 @@
 import store from "./store"
 
 const userStore = store({
-    name: ""
+    name: "",
+    id: ""
 })
 
 export default userStore

@@ -21,6 +21,7 @@ export default {
             let res = await api.me(token)
             if(res.status){
                 userStore.creator.name(res.data.name)
+                userStore.creator.id(res.data.id)
                 this.$router.push("/home")
             }
         }

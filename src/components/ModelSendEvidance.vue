@@ -4,7 +4,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header d-block">
-                        <h5 class="modal-title" id="exampleModalLabel">Send Evidance</h5>
+                        <h5 class="modal-title evi-title" id="exampleModalLabel">Send Evidance</h5>
                         <p>{{name}}</p>
                     </div>
                     <div class="modal-body">
@@ -23,8 +23,8 @@
                         <div class="loader"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clear">Close</button>
-                        <button type="button" class="btn btn-primary" @click="upload">Send</button>
+                        <button type="button" class="btn btn-closed" data-bs-dismiss="modal" @click="clear">Close</button>
+                        <button type="button" class="btn btn-send" @click="upload">Send</button>
                     </div>
                 </div>
             </div>

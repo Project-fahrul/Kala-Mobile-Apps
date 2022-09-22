@@ -9,11 +9,50 @@ const instance = axios.create({
 });
 
 const api = {
-    async getEmail(){
-
+    async addCutomer(params){
+        let token = await vueCookie.get("token")
+        let ret = {
+            status: true
+        }
+        await instance.post("/customer", params, {
+            headers: {
+                "Authorization": token
+            }
+        }).catch(() => {
+            ret.status = false
+        });
+        return ret.status
+    },
+    async editCustomer(id, params){
+        let token = await vueCookie.get("token")
+        let ret = {
+            status: true
+        }
+        await instance.patch(`/customer/${id}`, params, {
+            headers: {
+                "Authorization": token
+            }
+        }).catch(() => {
+            ret.status = false
+        });
+        return ret.status
+    },
+    async deleteCustomer(id){
+        let token = await vueCookie.get("token")
+        let ret = {
+            status: true
+        }
+        await instance.delete(`/customer/${id}`, {
+            headers: {
+                "Authorization": token
+            }
+        }).catch(() => {
+            ret.status = false
+        });
+        return ret.status
     },
     async token() {
-        return await vueCookie.VueCookies.get("token")
+        return await vueCookie.get("token")
     },
     async login(email, password) {
         let ret = {}
