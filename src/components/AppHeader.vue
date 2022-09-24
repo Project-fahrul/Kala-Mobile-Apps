@@ -2,7 +2,7 @@
     <div class="position-relative">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Kalla Apps</a>
+                <a class="navbar-brand" href="#">Customer Retention</a>
                 <button class="btn" type="button" @click="sidebar">
                     <font-awesome-icon icon="bars" style="color: #fff;"></font-awesome-icon>
                 </button>

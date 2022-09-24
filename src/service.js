@@ -2,27 +2,26 @@ import axios from "axios"
 import vueCookie from "vue-cookies"
 
 const instance = axios.create({
-    // baseURL: 'http://103.63.25.154:8080',
-    baseURL: "http://localhost:8080",
+    baseURL: 'http://103.63.25.154:8080',
+    // baseURL: "http://localhost:8080",
     timeout: 1000,
     headers: { 'Content-type': 'application/json' }
 });
 
 const api = {
-    async forgotPassword(email){
-        let res = true
-        let token = await vueCookie.get("token")
-        await instance.post("/user/forgot-password", {
-            email: email
-        },{
-            headers: {
-                "Authorization": token
-            }
+     async forgotPassword(email){
+        let data = {
+            status: true
+        };
+
+         await instance.post("/user/forgot-password", {
+            email: email,
         }).catch(()=>{
-            res = false
+            data.status = false
         })
 
-        return res
+
+        return data.status
     },
     async addCutomer(params){
         let token = await vueCookie.get("token")
@@ -113,30 +112,32 @@ const api = {
         return res
     },
     async checkEmail(email) {
+        let res = {
+            status: true
+        }
         let data = await instance.post("/user/email", {
             email: email
         }).catch(() => {
-            return {
-                status: false
-            }
+            
+                res.status= false
+            
         })
 
-        return {
-            status: true,
-            data: data.data.data
-        }
+    
+            res.data = data.data.data
+            return res
+        
     },
     async changePassword(email, password) {
+        let status = true
         await instance.patch("/user/change-password", {
             email: email,
             password: password
         }).catch(() => {
-            return {
-                status: false
-            }
+           status = false
         })
         return {
-            status: true
+            status: status
         }
     },
     async listCustomer(offset){

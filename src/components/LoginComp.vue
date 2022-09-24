@@ -1,5 +1,5 @@
 <template>
-    <div class="container d-flex login">
+    <div class="container d-flex login w-footer">
         <img class="acent-1" src="../assets/Vector.svg" alt="acent">
         <img class="acent-2" src="../assets/Vector1.svg" alt="acent">
 

@@ -92,7 +92,7 @@ nav.navbar{
 }
 
 .sidebar .active .icon{
-    color: var(--primary-color);
+    color: var(--yellow);
 } 
 
 .sidebar .active .action{
@@ -372,4 +372,13 @@ footer{
 .btn-closed{
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
+}
+
+.modal-header{
+    color: #fff;
+    background-color: var(--yellow);
+}
+
+.cc{
+    color: #fff;
 }

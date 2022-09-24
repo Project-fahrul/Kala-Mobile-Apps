@@ -38,7 +38,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{isEdit ? 'Edit' : 'Tambah'}} Customer</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn cc" data-bs-dismiss="modal" aria-label="Close">
+                            X
+                        </button>
                     </div>
                     <div v-if="message!=null" class="modal-body">
                         {{message}}

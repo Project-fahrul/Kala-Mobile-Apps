@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import "./assets/styles.css"
 import VueImageChooser from 'vue-image-chooser'
 
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import font awesome icon component */
@@ -15,7 +16,7 @@ import { faBell, faPeopleGroup, faSignOut, faArrowRight, faSpinner, faBars, faEn
 
 /* add icons to the library */
 library.add(faBell,faPeopleGroup, faSignOut, faArrowRight, faSpinner, faBars, faEnvelope, faLock)
-
+ 
 createApp(App)
     .use(routes)
     .use(VueImageChooser)

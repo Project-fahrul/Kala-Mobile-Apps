@@ -63,6 +63,7 @@ export default {
             else {
                 stat = await service.changePassword(this.email, this.password);
             }
+            console.log(stat);
             this.loading = false;
             if (!stat.status) {
                 this.message = this.step == 0 ? "Invalid email address" : "Change password failed";
