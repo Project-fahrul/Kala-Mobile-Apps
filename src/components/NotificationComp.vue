@@ -14,7 +14,10 @@
                     </button>
                 </div>
                 <div class="mt-3" v-if="notif == null">
-                    Belum ada evidance
+                    <div class="empty">
+                        <font-awesome-icon icon="user" class="empty-icon" />
+                        <p>Belum ada evidance</p>
+                    </div>
                 </div>
             </div>
         </div>

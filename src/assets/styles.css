@@ -382,3 +382,21 @@ footer{
 .cc{
     color: #fff;
 }
+
+.empty{
+    padding-top: 120px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-icon{
+    color: #7a97bb;
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.empty p{
+    color: #7a97bb;
+}

@@ -22,6 +22,12 @@
                         </ul>
                         </div>
                     </div>
+                    <div class="mb-3" v-if="customer == null || customer.length == 0">
+                        <div class="empty">
+                        <font-awesome-icon icon="user" class="empty-icon" />
+                        <p>Belum ada customer ditambahkan</p>
+                    </div>
+                    </div>
                 </div>
                 <div class="cus-page">
                     <button class="btn disabled">Prev</button>
