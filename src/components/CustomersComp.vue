@@ -29,11 +29,12 @@
                     </div>
                     </div>
                 </div>
-                <div class="cus-page">
-                    <button class="btn disabled">Prev</button>
-                    <p class="btn">1/1</p>
-                    <button class="btn disabled">Next</button>
-                </div>
+                
+    <div class="cus-page">
+        <button @click="prev" class="btn" :class="[isPrevActive ? 'page-evidance' : 'disabled']">Prev</button>
+        <p class="btn page-evidance">{{page}}/{{pages}}</p>
+        <button @click="next" class="btn" :class="[isNextActive ? 'page-evidance' : 'disabled']">Next</button>
+    </div>
             </div>
         </div>
     </div>
@@ -149,7 +150,10 @@ export default {
                 tipeAngsuran: "tunai",
                 noRangka:"",
                 totalAngsuran: 0
-            }
+            },
+            pages: 1,
+            page: 1
+
         }
     },
     methods: {
@@ -295,13 +299,45 @@ export default {
                 }
             })
             Customer.creator.customers(composeCustomer)
-        }
+        },
+        async next(){
+                if(!this.isNextActive){
+                    return
+                }
+                this.page++
+                let data = await api.listCustomer(this.page)
+                this.pages = data.TotalPage
+                let composeCustomer = data.Customer.map(e => {
+                    return {
+                        id: e.id,
+                        name: e.name,
+                        type: e.type_kendaraan
+                    }
+                })
+                Customer.creator.customers(composeCustomer)
+            },
+            async prev(){
+                if(!this.isPrevActive){
+                    return
+                }
+                this.page--
+                let data = await api.listCustomer(this.page)
+                this.pages = data.TotalPage
+                let composeCustomer = data.Customer.map(e => {
+                    return {
+                        id: e.id,
+                        name: e.name,
+                        type: e.type_kendaraan
+                    }
+                })
+                Customer.creator.customers(composeCustomer)
+            },
     },
     async mounted() {
         if (Customer.state.customers.length == 0) {
-            let data = await api.listCustomer(0)
-
-            let composeCustomer = data.map(e => {
+            let data = await api.listCustomer(this.page)
+            this.pages = data.TotalPage
+            let composeCustomer = data.Customer.map(e => {
                 return {
                     id: e.id,
                     name: e.name,
@@ -319,6 +355,12 @@ export default {
         customer: () => {
             let { state } = Customer
             return state.customers
+        },
+        isNextActive(){
+            return this.page < this.pages
+        },
+        isPrevActive(){
+            return this.page > 1
         }
     }
 }

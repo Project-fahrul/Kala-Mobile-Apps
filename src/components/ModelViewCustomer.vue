@@ -16,7 +16,7 @@
                             <p class="cus-attr-val">{{customerData.no_hp}}</p>
                         </div>
                         <div class="mb-3">
-                            <p class="cus-attr">Tanggal DEC</p>
+                            <p class="cus-attr">Tanggal service selanjutnya</p>
                             <p class="cus-attr-val">{{cvt(customerData.tgl_dec)}}</p>
                         </div>
                         <div class="mb-3">
@@ -28,7 +28,7 @@
                             <p class="cus-attr-val">{{cvt(customerData.tgl_lahir)}}</p>
                         </div>
                         <div class="mb-3">
-                            <p class="cus-attr">Tanggal Angsuran</p>
+                            <p class="cus-attr">Tanggal angsuran selanjutnya</p>
                             <p class="cus-attr-val">{{cvt(customerData.tgl_angsuran)}}</p>
                         </div>
                         <div class="mb-3">

@@ -2,8 +2,8 @@ import axios from "axios"
 import vueCookie from "vue-cookies"
 
 const instance = axios.create({
-    baseURL: 'http://103.63.25.154:8080',
-    // baseURL: "http://localhost:8080",
+    // baseURL: 'http://103.63.25.154:8080',
+    baseURL: "http://localhost:8080",
     timeout: 1000,
     headers: { 'Content-type': 'application/json' }
 });
@@ -140,9 +140,9 @@ const api = {
             status: status
         }
     },
-    async listCustomer(offset){
+    async listCustomer(page){
         let token = await vueCookie.get("token")
-        let data = await instance.get(`/customer/sales?sales=${offset}`,{
+        let data = await instance.get(`/customer/sales?page=${page}`,{
             headers: {
                 "Authorization": token
             }
