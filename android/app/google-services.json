@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:746177280625:android:a2665224c63472da6db9d0",
+        "mobilesdk_app_id": "1:746177280625:android:c68ec3f901199b5e6db9d0",
         "android_client_info": {
-          "package_name": "com.example.app"
+          "package_name": "com.kalla.app"
         }
       },
       "oauth_client": [

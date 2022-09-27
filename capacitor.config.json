@@ -1,6 +1,6 @@
 {
-  "appId": "com.example.app",
-  "appName": "kalamobileapp",
+  "appId": "com.kalla.app",
+  "appName": "Customer Retention",
   "webDir": "dist",
   "bundledWebRuntime": false
 }

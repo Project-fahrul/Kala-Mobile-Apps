@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">kalamobileapp</string>
-    <string name="title_activity_main">kalamobileapp</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="app_name">Customer Retention</string>
+    <string name="title_activity_main">Customer Retention</string>
+    <string name="package_name">com.kalla.app</string>
+    <string name="custom_url_scheme">com.kalla.app</string>
 </resources>
