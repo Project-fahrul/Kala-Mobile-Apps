@@ -27,7 +27,7 @@
                             <p class="cus-attr">Tanggal Lahir</p>
                             <p class="cus-attr-val">{{cvt(customerData.tgl_lahir)}}</p>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" v-if="customerData.angsuran == 'Kredit'">
                             <p class="cus-attr">Tanggal angsuran selanjutnya</p>
                             <p class="cus-attr-val">{{cvt(customerData.tgl_angsuran)}}</p>
                         </div>

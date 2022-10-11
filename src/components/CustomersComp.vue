@@ -32,7 +32,7 @@
                 
     <div class="cus-page">
         <button @click="prev" class="btn" :class="[isPrevActive ? 'page-evidance' : 'disabled']">Prev</button>
-        <p class="btn page-evidance">{{page}}/{{pages}}</p>
+        <p class="btn page-evidance">{{page}}/{{pages == 0 ? 1 : pages}}</p>
         <button @click="next" class="btn" :class="[isNextActive ? 'page-evidance' : 'disabled']">Next</button>
     </div>
             </div>
@@ -67,10 +67,17 @@
                             <input type="text" class="form-control" required v-model="data.phone">
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Angsuran</label>
+                            <select class="form-select" v-model="data.tipeAngsuran" required>
+                                <option selected value="Tunai">Tunai</option>
+                                <option value="Kredit">Kredit</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Tanggal service selanjutnya</label>
                             <input type="date" class="form-control" required v-model="data.serviceDate">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" ref="angsuran">
                             <label class="form-label">Tanggal angsuran selanjutnya</label>
                             <input type="date" class="form-control" required v-model="data.angsuranDate">
                         </div>
@@ -97,13 +104,6 @@
                         <div class="mb-3">
                             <label class="form-label">Leasing</label>
                             <input type="text" class="form-control" v-model="data.leasing" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Angsuran</label>
-                            <select class="form-select" v-model="data.tipeAngsuran" required>
-                                <option selected value="Tunai">Tunai</option>
-                                <option value="Kredit">Kredit</option>
-                            </select>
                         </div>
                     </div>
                     <div class="modal-footer" v-if="message==null">
@@ -147,7 +147,7 @@ export default {
                 birthday: "",
                 tipeKendaraan: "",
                 leasing: "",
-                tipeAngsuran: "tunai",
+                tipeAngsuran: "Tunai",
                 noRangka:"",
                 totalAngsuran: 0
             },
@@ -155,6 +155,15 @@ export default {
             page: 1
 
         }
+    },
+    watch:{
+        'data.tipeAngsuran'(n){
+            if(n == "Tunai"){
+                this.$refs.angsuran.style.display = 'none';
+            }else{
+                this.$refs.angsuran.style.display = 'block';
+            }
+        },
     },
     methods: {
         show: async function (id) {
@@ -223,7 +232,7 @@ export default {
             let service = new Date(this.data.serviceDate),
             lahir = new Date(this.data.birthday),
             stnk = new Date(this.data.stnkDate),
-            angsuran = new Date(this.data.angsuranDate)
+            angsuran = this.data.tipeAngsuran == 'Tunai' ? new Date('2090-04-11T10:20:30Z') : new Date(this.data.angsuranDate) 
             let now = Date.now()
 
             if(!this.cek(now, service) ||
@@ -273,7 +282,7 @@ export default {
                 this.message = null
                 let data = await api.listCustomer(0)
 
-            let composeCustomer = data.map(e => {
+            let composeCustomer = data.Customer.map(e => {
                 return {
                     id: e.id,
                     name: e.name,
@@ -291,7 +300,7 @@ export default {
             await api.deleteCustomer(id)
             let data = await api.listCustomer(0)
 
-            let composeCustomer = data.map(e => {
+            let composeCustomer = data.Customer.map(e => {
                 return {
                     id: e.id,
                     name: e.name,
@@ -307,6 +316,7 @@ export default {
                 this.page++
                 let data = await api.listCustomer(this.page)
                 this.pages = data.TotalPage
+                console.log("data next", data);
                 let composeCustomer = data.Customer.map(e => {
                     return {
                         id: e.id,
@@ -323,6 +333,7 @@ export default {
                 this.page--
                 let data = await api.listCustomer(this.page)
                 this.pages = data.TotalPage
+                console.log("data prev: "+data);
                 let composeCustomer = data.Customer.map(e => {
                     return {
                         id: e.id,
