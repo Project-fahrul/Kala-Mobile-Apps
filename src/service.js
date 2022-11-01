@@ -4,7 +4,7 @@ import vueCookie from "vue-cookies"
 const instance = axios.create({
     baseURL: 'http://103.63.25.154:8080',
     // baseURL: "http://localhost:8080",
-    timeout: 1000,
+    timeout: 60000,
     headers: { 'Content-type': 'application/json' }
 });
 

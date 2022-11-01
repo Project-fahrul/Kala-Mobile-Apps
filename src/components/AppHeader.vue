@@ -38,6 +38,7 @@
 <script>
 import userStore from '@/storage/userStorage';
 import api from '@/service';
+import customerStore from '@/storage/customerStore';
 export default {
     props: {
         clbk: {
@@ -64,6 +65,7 @@ export default {
             this.clbk(no)
         },
         logout() {
+            customerStore.creator.customers([])
             this.$cookies.remove("token")
             this.$router.push("/")
         }

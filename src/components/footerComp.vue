@@ -8,7 +8,7 @@
             <div class="container">
                 <p>
                     Jl. Lanto Dg. Pasewang No.15, <br>
-                    No. Telp. : (0413) 82477, 83477, No. Fax. : (0413) 82577
+                    No. Telp. : 08114490666, No. Fax. : (0413) 82577
                 </p>
             </div>
         </div>

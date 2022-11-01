@@ -40,7 +40,7 @@
     </div>
     <ModelViewCustomer :customer="model"></ModelViewCustomer>
     <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <form @submit.prevent="save">
+        <form>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -77,7 +77,7 @@
                             <label class="form-label">Tanggal service selanjutnya</label>
                             <input type="date" class="form-control" required v-model="data.serviceDate">
                         </div>
-                        <div class="mb-3" ref="angsuran">
+                        <div class="mb-3" v-if="data.tipeAngsuran == 'Kredit'">
                             <label class="form-label">Tanggal angsuran selanjutnya</label>
                             <input type="date" class="form-control" required v-model="data.angsuranDate">
                         </div>
@@ -106,8 +106,11 @@
                             <input type="text" class="form-control" v-model="data.leasing" required>
                         </div>
                     </div>
-                    <div class="modal-footer" v-if="message==null">
-                        <button type="submit" class="btn simpan">Simpan</button>
+                    <div class="modal-footer" :style="{display: dataDisplaySimpan}">
+                        <button type="button" @click="save" class="btn simpan">Simpan</button>
+                    </div>
+                    <div class="modal-footer" :style="{display: dataDisplayBack}">
+                        <button type="button" class="btn simpan" @click="setBack">Kembali</button>
                     </div>
                 </div>
             </div>
@@ -157,15 +160,24 @@ export default {
         }
     },
     watch:{
-        'data.tipeAngsuran'(n){
-            if(n == "Tunai"){
-                this.$refs.angsuran.style.display = 'none';
-            }else{
-                this.$refs.angsuran.style.display = 'block';
-            }
-        },
+        // 'data.tipeAngsuran'(n){
+        //     if(n == "Tunai"){
+        //         this.$refs.angsuran.style.display = 'none';
+        //     }else{
+        //         this.$refs.angsuran.style.display = 'block';
+        //     }
+            
+        // },
     },
     methods: {
+        setBack(){
+            this.message=null;
+            // if(this.data.tipeAngsuran == "Tunai"){
+            //     this.$refs.angsuran.style.display = 'none';
+            // }else{
+            //     this.$refs.angsuran.style.display = 'block';
+            // }
+        },
         show: async function (id) {
             this.model = []
             var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
@@ -227,6 +239,7 @@ export default {
             return x > 0
         },
         async save(){
+            console.log("salalalal1121212")
             this.isLoaading = true
             let res = true
             let service = new Date(this.data.serviceDate),
@@ -236,7 +249,8 @@ export default {
             let now = Date.now()
 
             if(!this.cek(now, service) ||
-            !this.cek(now, stnk) || !this.cek(now, angsuran)){
+            !this.cek(now, stnk) || (!this.cek(now, angsuran) && this.data.tipeAngsuran == 'Kredit')){
+                console.log("salalalal")
                 this.message = "Kesalahan menginput tanggal"
                 return
             }
@@ -345,6 +359,7 @@ export default {
             },
     },
     async mounted() {
+        // this.$refs.angsuran.style.display = 'none';
         if (Customer.state.customers.length == 0) {
             let data = await api.listCustomer(this.page)
             this.pages = data.TotalPage
@@ -372,6 +387,12 @@ export default {
         },
         isPrevActive(){
             return this.page > 1
+        },
+        dataDisplaySimpan(){
+            return this.message == null ? 'flex' : 'none'
+        },
+        dataDisplayBack(){
+            return this.message != null ? 'flex' : 'none'
         }
     }
 }
