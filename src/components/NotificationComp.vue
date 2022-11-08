@@ -33,6 +33,7 @@ import bootstrap from "bootstrap/dist/js/bootstrap.min.js"
 import api from "../service";
 import notifStorage from "../storage/notificationStorage"
 import FooterComp from './footerComp.vue';
+import NotificationPlugin from '@/NotificationPlugin';
 
 export default {
     components: { ModelSendEvidance, FooterComp },
@@ -52,6 +53,10 @@ export default {
     async mounted(){
         let notif = await api.listAllNotification()
         notifStorage.creator.notifications(notif)
+        const newData = notif ? notif.length : 0
+        NotificationPlugin.setAlarm({
+            hour: newData == 0 ? 0 : 1
+        })
     },
     data(){
         return {

@@ -36,6 +36,7 @@
 import api from '@/service';
 import ImagePicker from './ImagePicker.vue';
 import notifStorage from "../storage/notificationStorage"
+import NotificationPlugin from '@/NotificationPlugin';
 
 export default {
     props:{
@@ -114,6 +115,9 @@ export default {
 
             this.loading = false
             notifStorage.creator.notifications(newData)
+            NotificationPlugin.setAlarm({
+                hour: newData.length == 0 ? 0 : 1
+            })
             this.clear()
             this.loading = false
 

@@ -64,7 +64,7 @@ export default {
   },
   async mounted() {
     if ((await Device.getInfo()).platform == "android") {
-      this.activevated();
+
       App.addListener("backButton", () => {
         let n = this.$router.currentRoute.value.name
         if (n == "Home" || n == "Onboarding") {
