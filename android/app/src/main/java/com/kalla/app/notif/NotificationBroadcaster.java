@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -15,6 +16,7 @@ public class NotificationBroadcaster extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i("Test", "Fired");
         Intent newIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = null;
             pendingIntent = PendingIntent.getActivity

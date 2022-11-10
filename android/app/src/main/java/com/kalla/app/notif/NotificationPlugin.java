@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @CapacitorPlugin(name = "NotificationPlugin")
 public class NotificationPlugin extends Plugin {
     private static final int ALARM_MANAGER_ID = 1234;
+    private static final int ALARM_MANAGER_REPEATING_ID = 1235;
 
 
     private Context context;
@@ -42,12 +44,12 @@ public class NotificationPlugin extends Plugin {
 
     private Integer getHour(){
         Calendar calendar = Calendar.getInstance();
-        List<Integer> hours = List.of(8,11,14,16);
+        List<Integer> hours = List.of(11,12,14,16);
         Integer now = calendar.get(Calendar.HOUR_OF_DAY);
 
         hours = hours.stream().filter(h -> h > now).collect(Collectors.toList());
 
-        return hours.size() > 0 ? hours.get(0) : 8;
+        return hours.size() > 0 ? hours.get(0) : 11;
     }
 
     @Override
@@ -63,12 +65,32 @@ public class NotificationPlugin extends Plugin {
 
         PendingIntent pendingIntent = null;
         Intent intent = new Intent(context, NotificationBroadcaster.class);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
         pendingIntent =  PendingIntent.getBroadcast(context, ALARM_MANAGER_ID,
                 intent,
                 PendingIntent.FLAG_MUTABLE);
+        PendingIntent pir = PendingIntent.getBroadcast(context, ALARM_MANAGER_REPEATING_ID,
+                intent,
+                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_NO_CREATE);
         boolean alarmUp = pendingIntent != null;
+
+        if(pir == null){
+            Calendar repeat = Calendar.getInstance();
+            if(repeat.get(Calendar.HOUR_OF_DAY) > 8){
+                repeat.add(Calendar.DATE, 1);
+            }
+            repeat.set(Calendar.HOUR_OF_DAY, 8);
+            repeat.set(Calendar.MINUTE, 0);
+            repeat.set(Calendar.SECOND, 0);
+            pir = PendingIntent.getBroadcast(context, ALARM_MANAGER_REPEATING_ID,
+                    intent,
+                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, repeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY,pir);
+            Log.i("Alarm", "Set repeating");
+//            Toast.makeText(context, "Wait, Show  Notif at 5:00 AM", Toast.LENGTH_SHORT).show();
+        }
 
         if (alarmUp)
         {
@@ -87,12 +109,14 @@ public class NotificationPlugin extends Plugin {
             Log.i("Notif", "tambah 1 hari");
             calendar.add(Calendar.DATE, 1);
         }
+
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-//        calendar.set(Calendar.HOUR_OF_DAY, 9);
-//        calendar.set(Calendar.MINUTE, 42);
+//        calendar.set(Calendar.HOUR_OF_DAY, 11);
+//        calendar.set(Calendar.MINUTE, 9);
+//        calendar.set(Calendar.SECOND, 0);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getBroadcast
@@ -104,7 +128,7 @@ public class NotificationPlugin extends Plugin {
                     (context, ALARM_MANAGER_ID, intent, PendingIntent.FLAG_ONE_SHOT);
         }
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
         Log.i("Notification", String.format("Alarm active at %d", hour));
     }
 }

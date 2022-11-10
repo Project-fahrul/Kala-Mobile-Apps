@@ -94,9 +94,11 @@ export default {
     },
     methods: {
         displayFile(event) {
+            console.log("event image", event.target.files);
             if (event.target.files && event.target.files[0]) {
                 var reader = new FileReader();
                 reader.onload = e => {
+            console.log("load image", event.target.files);
                     this.src = e.target.result;
                     const $event = {
                         // data: e.target.result.replace(/^data:image\/[a-z]+;base64,/, ''),

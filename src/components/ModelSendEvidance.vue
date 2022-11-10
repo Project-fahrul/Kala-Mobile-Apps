@@ -90,6 +90,13 @@ export default {
             }else{
                 this.valid = true
             }
+
+            if(this.file.file == undefined){
+                this.valid = false
+                this.errorMessage = "File tidak tervalidasi"
+                return
+            }
+
             this.loading = true
             let formData = new FormData();
             formData.append('image', this.file.file)
