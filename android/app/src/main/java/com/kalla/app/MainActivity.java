@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
@@ -44,18 +45,6 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(NotificationPlugin.class);
         super.onCreate(savedInstanceState);
         startUpdate();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void ignoreBatteryOptimization() {
-        Intent intent = new Intent();
-        String packageName = getPackageName();
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        if (pm != null && !pm.isIgnoringBatteryOptimizations(packageName)) {
-            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            intent.setData(Uri.parse("package:" + packageName));
-            startActivity(intent);
-        }
     }
 
     @Override

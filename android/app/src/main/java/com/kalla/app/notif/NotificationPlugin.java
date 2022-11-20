@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,9 +26,10 @@ import java.util.stream.Collectors;
 
 @CapacitorPlugin(name = "NotificationPlugin")
 public class NotificationPlugin extends Plugin {
-    private static final int ALARM_MANAGER_ID = 1234;
-    private static final int ALARM_MANAGER_REPEATING_ID = 1235;
-
+    public static final int ALARM_MANAGER_ID = 1234;
+    public static final int ALARM_MANAGER_REPEATING_ID = 1235;
+    public static final String ALARM_INTENT_KEY = "ALARM_REPEATER";
+    public static final String ALARM_BUNDLE_KEY = "BUNDLE_KEY";
 
     private Context context;
     private Activity activity;
@@ -65,14 +67,13 @@ public class NotificationPlugin extends Plugin {
 
         PendingIntent pendingIntent = null;
         Intent intent = new Intent(context, NotificationBroadcaster.class);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent notificationRepeater = new Intent(context, NotificationBroadcaster.class);
 
         pendingIntent =  PendingIntent.getBroadcast(context, ALARM_MANAGER_ID,
                 intent,
                 PendingIntent.FLAG_MUTABLE);
         PendingIntent pir = PendingIntent.getBroadcast(context, ALARM_MANAGER_REPEATING_ID,
-                intent,
+                notificationRepeater,
                 PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_NO_CREATE);
         boolean alarmUp = pendingIntent != null;
 
@@ -81,31 +82,36 @@ public class NotificationPlugin extends Plugin {
             if(repeat.get(Calendar.HOUR_OF_DAY) > 8){
                 repeat.add(Calendar.DATE, 1);
             }
-            repeat.set(Calendar.HOUR_OF_DAY, 8);
+            Bundle bundle = new Bundle();
+            bundle.putInt(ALARM_BUNDLE_KEY, ALARM_MANAGER_REPEATING_ID);
+            intent.putExtra(ALARM_INTENT_KEY, bundle);
+            repeat.set(Calendar.HOUR_OF_DAY, 9);
             repeat.set(Calendar.MINUTE, 0);
             repeat.set(Calendar.SECOND, 0);
             pir = PendingIntent.getBroadcast(context, ALARM_MANAGER_REPEATING_ID,
                     intent,
                     PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, repeat.getTimeInMillis(), AlarmManager.INTERVAL_DAY,pir);
+            ScheduleAlarm.with(context).schedule(repeat, pir);
             Log.i("Alarm", "Set repeating");
-//            Toast.makeText(context, "Wait, Show  Notif at 5:00 AM", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Test app notif", Toast.LENGTH_SHORT).show();
         }
 
         if (alarmUp)
         {
             if(hour == 0){
                 Log.i("Notification", "AlarmDown");
-                if(Objects.nonNull(pendingIntent))
-                    alarmManager.cancel(pendingIntent);
-                return;
+                if(Objects.nonNull(pendingIntent)){
+                    AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                    am.cancel(pendingIntent);
+                    return;
+                }
             }
         }
 
         hour = getHour();
         Calendar calendar = Calendar.getInstance();
         Log.i("Jam Sekarang", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
-        if(hour < calendar.get(Calendar.HOUR_OF_DAY)){
+        if(hour <= calendar.get(Calendar.HOUR_OF_DAY)){
             Log.i("Notif", "tambah 1 hari");
             calendar.add(Calendar.DATE, 1);
         }
@@ -118,17 +124,7 @@ public class NotificationPlugin extends Plugin {
 //        calendar.set(Calendar.MINUTE, 9);
 //        calendar.set(Calendar.SECOND, 0);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast
-                    (context, ALARM_MANAGER_ID, intent, PendingIntent.FLAG_MUTABLE);
-        }
-        else
-        {
-            pendingIntent = PendingIntent.getBroadcast
-                    (context, ALARM_MANAGER_ID, intent, PendingIntent.FLAG_ONE_SHOT);
-        }
-
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+        ScheduleAlarm.with(context).schedule(calendar, pendingIntent);
         Log.i("Notification", String.format("Alarm active at %d", hour));
     }
 }
