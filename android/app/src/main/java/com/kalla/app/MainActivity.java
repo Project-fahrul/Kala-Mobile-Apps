@@ -1,7 +1,6 @@
 package com.kalla.app;
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -64,7 +63,7 @@ public class MainActivity extends BridgeActivity {
                     appUpdateManager.startUpdateFlowForResult(
                             result,
                             AppUpdateType.IMMEDIATE,
-                            getParent(),
+                            this,
                             RC_UPDATE_APP
                     );
                 }catch (IntentSender.SendIntentException e){
@@ -83,7 +82,7 @@ public class MainActivity extends BridgeActivity {
                         appUpdateManager.startUpdateFlowForResult(
                                 result,
                                 AppUpdateType.IMMEDIATE,
-                                getParent(),
+                                this,
                                 RC_UPDATE_APP
                         );
                     }catch (IntentSender.SendIntentException e){
