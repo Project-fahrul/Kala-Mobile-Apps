@@ -1,6 +1,7 @@
 import 'package:customer_retention/component/customer_modal_layout.dart';
 import 'package:customer_retention/component/input_field.dart';
 import 'package:customer_retention/component/profile_modal_layout.dart';
+import 'package:customer_retention/model/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -14,6 +15,11 @@ class ProfileFragment extends StatefulWidget {
 
 class _ProfileFragmentState extends State<ProfileFragment> {
   bool editForm = true;
+  ProfileModel data = ProfileModel(
+      name: "Fahrul",
+      phoneNumber: "08123456789",
+      email: "fahrulputra40@gmail.com");
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +41,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                           useSafeArea: true,
                           isScrollControlled: true,
                           context: context,
-                          builder: (contexx) => const ProfileModalLayout());
+                          builder: (contexx) => ProfileModalLayout(
+                                profileModel: data,
+                              ));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF3D916C)),
@@ -51,8 +59,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -61,7 +69,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const Text("Fahrul"),
+                  Text(data.name),
                   const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
                     child: Text(
@@ -69,7 +77,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  Text("fahrulputra40@gmail.com"),
+                  Text(data.email),
                   const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
                     child: Text(
@@ -77,7 +85,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const Text("08123456789"),
+                  Text(data.phoneNumber),
                   const Divider(height: 20, thickness: 2),
                   const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -90,19 +98,27 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   const Padding(
                     padding: EdgeInsets.only(bottom: 10),
                     child: Text(
-                      "Password baru",
+                      "Password lama",
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const InputField(Icon(Icons.key)),
+                  const InputField(Icon(Icons.key), isPassword: true),
                   const Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    padding: EdgeInsets.only(bottom: 10, top: 10),
                     child: Text(
                       "Password baru",
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const InputField(Icon(Icons.key)),
+                  const InputField(Icon(Icons.key), isPassword: true),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Text(
+                      "Konfirmasi Password",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  const InputField(Icon(Icons.key), isPassword: true),
                   Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       child: ElevatedButton(

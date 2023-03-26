@@ -1,10 +1,11 @@
 import 'package:customer_retention/component/customer_modal_layout.dart';
 import 'package:customer_retention/component/list_item_customer.dart';
+import 'package:customer_retention/model/dao/customer_response.dart';
 import 'package:flutter/material.dart';
 
 class CustomerFragment extends StatefulWidget {
-  const CustomerFragment({super.key});
-
+  CustomerFragment({super.key, required this.customerResponse});
+  List<CustomerResponse> customerResponse;
   @override
   State<CustomerFragment> createState() => _CustomerFragmentState();
 }
@@ -31,7 +32,9 @@ class _CustomerFragmentState extends State<CustomerFragment> {
                           useSafeArea: true,
                           isScrollControlled: true,
                           context: context,
-                          builder: (contexx) => const CustomerModalLayout());
+                          builder: (contexx) => CustomerModalLayout(
+                                createForm: true,
+                              ));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF3D916C)),
@@ -49,20 +52,25 @@ class _CustomerFragmentState extends State<CustomerFragment> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
             child: ListView.separated(
                 itemBuilder: (ctx, i) => GestureDetector(
-                      child: const ListItemCustomer(),
+                      child: ListItemCustomer(
+                          customerResponse:
+                              widget.customerResponse.elementAt(i)),
                       onTap: () {
                         showModalBottomSheet(
                             useSafeArea: true,
                             isScrollControlled: true,
                             context: ctx,
-                            builder: (contexx) => const CustomerModalLayout());
+                            builder: (contexx) => CustomerModalLayout(
+                                  customerResponse:
+                                      widget.customerResponse.elementAt(i),
+                                ));
                       },
                     ),
                 separatorBuilder: (_, i) => const Divider(
                       color: Colors.transparent,
                       height: 25,
                     ),
-                itemCount: 5),
+                itemCount: widget.customerResponse.length),
           ))
         ],
       ),

@@ -2,6 +2,10 @@ import 'package:customer_retention/component/customer_fragment.dart';
 import 'package:customer_retention/component/evidance_container.dart';
 import 'package:customer_retention/component/evidance_date.dart';
 import 'package:customer_retention/component/profile_fragment.dart';
+import 'package:customer_retention/model/dao/customer_response.dart';
+import 'package:customer_retention/model/dao/evidance_response.dart';
+import 'package:customer_retention/model/evidance_model.dart';
+import 'package:customer_retention/util_test.dart';
 import 'package:flutter/material.dart';
 
 class TemplateApp extends StatefulWidget {
@@ -12,11 +16,20 @@ class TemplateApp extends StatefulWidget {
 }
 
 class _TemplateAppState extends State<TemplateApp> {
-  bool search = false, memberPage = false;
+  bool search = false, memberPage = false, firstLoad = true;
   int index = 0;
+  String textSearch = "";
   TextEditingController textEditingController = TextEditingController();
+  EvidanceResponse? evidanceResponse;
+  List<CustomerResponse>? customerResponse;
+
   @override
   Widget build(BuildContext context) {
+    if (firstLoad) {
+      firstLoad = false;
+      evidanceResponse = UtilTest.getEvidanceResponse();
+      customerResponse = UtilTest().getCustomerResponse();
+    }
     return Scaffold(
       appBar: AppBar(
         title: !search
@@ -37,12 +50,17 @@ class _TemplateAppState extends State<TemplateApp> {
                             textEditingController.clear();
                             setState(() {
                               search = !search;
+                              textSearch = "";
                             });
                           },
                         ),
                         hintText: 'Cari Customer...',
                         border: InputBorder.none),
-                    onSubmitted: (d) {},
+                    onSubmitted: (d) {
+                      setState(() {
+                        textSearch = d;
+                      });
+                    },
                     controller: textEditingController,
                   ),
                 ),
@@ -78,9 +96,14 @@ class _TemplateAppState extends State<TemplateApp> {
             if (index == 0)
               const Padding(
                   padding: EdgeInsets.only(bottom: 5), child: EvidanceDate()),
-            if (index == 0) const Expanded(child: EvidanceContainer()),
-            if (index == 1) Expanded(child: const CustomerFragment()),
-            if (index == 2) Expanded(child: const ProfileFragment())
+            if (index == 0)
+              Expanded(child: EvidanceContainer(evidanceResponse!, textSearch)),
+            if (index == 1)
+              Expanded(
+                  child: CustomerFragment(
+                customerResponse: customerResponse!,
+              )),
+            if (index == 2) Expanded(child: ProfileFragment())
           ],
         ),
       ),

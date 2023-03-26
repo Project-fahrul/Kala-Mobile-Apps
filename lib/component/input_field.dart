@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  const InputField(this._icon, {super.key});
+  const InputField(this._icon, {super.key, this.isPassword = false});
   final Icon _icon;
+  final bool isPassword;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,6 +13,7 @@ class InputField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
         child: TextFormField(
+          obscureText: isPassword,
           decoration: InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.zero,

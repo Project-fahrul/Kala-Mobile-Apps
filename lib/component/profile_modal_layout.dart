@@ -1,18 +1,27 @@
-import 'package:customer_retention/component/customer_form_detail.dart';
-import 'package:customer_retention/component/customer_form_item.dart';
+import 'package:customer_retention/model/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class ProfileModalLayout extends StatefulWidget {
-  const ProfileModalLayout({super.key});
+  ProfileModalLayout({super.key, required this.profileModel});
+  ProfileModel profileModel;
 
   @override
   State<ProfileModalLayout> createState() => _ProfileModalLayoutState();
 }
 
 class _ProfileModalLayoutState extends State<ProfileModalLayout> {
-  bool editForm = true;
+  bool formReadOnly = true;
+  late ProfileModel profileModelEdit;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    profileModelEdit = widget.profileModel.copyWith();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext contexx) {
     return Container(
@@ -40,9 +49,9 @@ class _ProfileModalLayoutState extends State<ProfileModalLayout> {
                       IconButton(
                           color: Colors.white,
                           onPressed: () {
-                            if (editForm) {
+                            if (formReadOnly) {
                               setState(() {
-                                editForm = false;
+                                formReadOnly = false;
                               });
                               return;
                             }
@@ -54,13 +63,18 @@ class _ProfileModalLayoutState extends State<ProfileModalLayout> {
                                 TextButton(
                                     onPressed: () {
                                       setState(() {
-                                        editForm = true;
+                                        formReadOnly = true;
+                                        profileModelEdit =
+                                            widget.profileModel.copyWith();
                                       });
                                       Navigator.pop(contexx);
                                     },
                                     child: const Text("Tidak")),
                                 TextButton(
-                                    onPressed: () {}, child: const Text("Ya")),
+                                    onPressed: () {
+                                      Navigator.pop(contexx);
+                                    },
+                                    child: const Text("Ya")),
                               ],
                             );
                             showDialog(
@@ -68,7 +82,7 @@ class _ProfileModalLayoutState extends State<ProfileModalLayout> {
                                 useSafeArea: true,
                                 builder: (b) => alertDialog);
                           },
-                          icon: Icon(editForm ? Icons.edit : Icons.save)),
+                          icon: Icon(formReadOnly ? Icons.edit : Icons.save)),
                     ],
                   )
                 ],
@@ -84,21 +98,89 @@ class _ProfileModalLayoutState extends State<ProfileModalLayout> {
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Color.fromARGB(255, 131, 131, 131)))),
-                      child: Text("Fahrul")
-                      // TextFormField(
-                      //   decoration: const InputDecoration(
-                      //       border: InputBorder.none,
-                      //       isDense: true,
-                      //       contentPadding: EdgeInsets.zero),
-                      // ),
-                      )
-                  // )
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: formReadOnly ? 1 : 2,
+                                color: formReadOnly
+                                    ? Color.fromARGB(255, 131, 131, 131)
+                                    : Color(0xFF0E7F49)))),
+                    child: TextFormField(
+                      onChanged: (value) => profileModelEdit.name = value,
+                      controller:
+                          TextEditingController(text: profileModelEdit.name),
+                      readOnly: formReadOnly,
+                      decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero),
+                    ),
+                  ),
+                  const Divider(
+                    height: 18,
+                    color: Colors.transparent,
+                  ),
+                  const Text(
+                    "Email",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: formReadOnly ? 1 : 2,
+                                color: formReadOnly
+                                    ? Color.fromARGB(255, 131, 131, 131)
+                                    : Color(0xFF0E7F49)))),
+                    child: TextFormField(
+                      onChanged: (value) => profileModelEdit.email = value,
+                      readOnly: formReadOnly,
+                      controller:
+                          TextEditingController(text: profileModelEdit.email),
+                      decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero),
+                    ),
+                  ),
+                  const Divider(
+                    height: 18,
+                    color: Colors.transparent,
+                  ),
+                  const Text(
+                    "Nomor Hp",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: formReadOnly ? 1 : 2,
+                                color: formReadOnly
+                                    ? Color.fromARGB(255, 131, 131, 131)
+                                    : Color(0xFF0E7F49)))),
+                    child: TextFormField(
+                      onChanged: (value) =>
+                          profileModelEdit.phoneNumber = value,
+                      readOnly: formReadOnly,
+                      controller: TextEditingController(
+                          text: profileModelEdit.phoneNumber),
+                      decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero),
+                    ),
+                  ),
+                  const Divider(
+                    height: 18,
+                    color: Colors.transparent,
+                  ),
                 ],
               ),
             ),
