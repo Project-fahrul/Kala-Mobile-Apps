@@ -1,10 +1,11 @@
+import 'package:customer_retention/model/dao/template_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class EvidanceDate extends StatefulWidget {
-  const EvidanceDate({super.key});
-
+  EvidanceDate(this.templateModel, {super.key});
+  TemplateModel? templateModel;
   @override
   State<EvidanceDate> createState() => _EvidanceDateState();
 }
@@ -56,8 +57,8 @@ class _EvidanceDateState extends State<EvidanceDate> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.only(bottom: 2),
                       child: Text(
                         "Selamat datang,",
@@ -66,7 +67,9 @@ class _EvidanceDateState extends State<EvidanceDate> {
                       ),
                     ),
                     Text(
-                      "Fahrul Putra Pratama",
+                      widget.templateModel == null
+                          ? ""
+                          : widget.templateModel!.name,
                       style: TextStyle(
                           color: Color(0xFF3D916C),
                           fontWeight: FontWeight.w500),

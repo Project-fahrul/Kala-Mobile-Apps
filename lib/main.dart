@@ -3,6 +3,7 @@ import 'package:customer_retention/auth/confirm_token.dart';
 import 'package:customer_retention/auth/forgot_password.dart';
 import 'package:customer_retention/auth/login.dart';
 import 'package:customer_retention/auth/register.dart';
+import 'package:customer_retention/model/dao/template_model.dart';
 import 'package:customer_retention/splash_screen.dart';
 import 'package:customer_retention/template.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,9 @@ class KallaApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case "/main":
-            return MaterialPageRoute(builder: (_) => const TemplateApp());
+            return MaterialPageRoute(
+                builder: (_) =>
+                    TemplateApp(settings.arguments as TemplateModel));
           case "/login":
             return MaterialPageRoute(builder: (_) => const LoginPage());
           case "/register":

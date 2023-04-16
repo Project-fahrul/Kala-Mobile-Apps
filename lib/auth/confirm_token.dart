@@ -55,7 +55,7 @@ class _ConfirmTokenState extends State<ConfirmToken> {
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: Text("Token"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(bottom: 18),
                                     child: InputField(Icon(Icons.token)),
                                   ),

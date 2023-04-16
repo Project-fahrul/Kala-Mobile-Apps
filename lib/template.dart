@@ -4,12 +4,14 @@ import 'package:customer_retention/component/evidance_date.dart';
 import 'package:customer_retention/component/profile_fragment.dart';
 import 'package:customer_retention/model/dao/customer_response.dart';
 import 'package:customer_retention/model/dao/evidance_response.dart';
+import 'package:customer_retention/model/dao/template_model.dart';
 import 'package:customer_retention/model/evidance_model.dart';
 import 'package:customer_retention/util_test.dart';
 import 'package:flutter/material.dart';
 
 class TemplateApp extends StatefulWidget {
-  const TemplateApp({super.key});
+  TemplateApp(this.templateModel, {super.key});
+  TemplateModel templateModel;
 
   @override
   State<TemplateApp> createState() => _TemplateAppState();
@@ -85,17 +87,19 @@ class _TemplateAppState extends State<TemplateApp> {
         currentIndex: index,
         onTap: (v) => setState(() {
           index = v;
+          search = false;
         }),
       ),
       body: Container(
-        color: Color(0xFFF2F2F2),
+        color: const Color(0xFFF2F2F2),
         alignment: search ? Alignment.center : Alignment.topLeft,
         // child: Image.asset("assets/image/search_empty.png"), search empty
         child: Column(
           children: [
             if (index == 0)
-              const Padding(
-                  padding: EdgeInsets.only(bottom: 5), child: EvidanceDate()),
+              Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: EvidanceDate(widget.templateModel)),
             if (index == 0)
               Expanded(child: EvidanceContainer(evidanceResponse!, textSearch)),
             if (index == 1)
@@ -103,7 +107,7 @@ class _TemplateAppState extends State<TemplateApp> {
                   child: CustomerFragment(
                 customerResponse: customerResponse!,
               )),
-            if (index == 2) Expanded(child: ProfileFragment())
+            if (index == 2) const Expanded(child: ProfileFragment())
           ],
         ),
       ),

@@ -55,15 +55,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: Text("Password"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(bottom: 18),
                                     child: InputField(Icon(Icons.email)),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: Text("Konfirmasi Password"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(bottom: 18),
                                     child: InputField(Icon(Icons.email)),
                                   ),

@@ -102,15 +102,15 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const InputField(Icon(Icons.key), isPassword: true),
-                  const Padding(
+                  InputField(Icon(Icons.key), isPassword: true),
+                  Padding(
                     padding: EdgeInsets.only(bottom: 10, top: 10),
                     child: Text(
                       "Password baru",
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const InputField(Icon(Icons.key), isPassword: true),
+                  InputField(Icon(Icons.key), isPassword: true),
                   const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
                     child: Text(
@@ -118,7 +118,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const InputField(Icon(Icons.key), isPassword: true),
+                  InputField(Icon(Icons.key), isPassword: true),
                   Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       child: ElevatedButton(

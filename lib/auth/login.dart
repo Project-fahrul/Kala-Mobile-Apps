@@ -1,5 +1,13 @@
+import 'dart:async';
+
+import 'package:customer_retention/api/login_api.dart';
 import 'package:customer_retention/component/input_field.dart';
+import 'package:customer_retention/component/modal.dart';
+import 'package:customer_retention/helper/rest_exception.dart';
+import 'package:customer_retention/model/dao/error_response.dart';
+import 'package:customer_retention/model/dao/template_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +17,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController(text: "");
+  bool _loading = false;
+  String? messageError;
+  TextEditingController passwordController = TextEditingController(text: "");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,10 +73,12 @@ class _LoginPageState extends State<LoginPage> {
                                         EdgeInsets.only(top: 11, bottom: 18),
                                     child: Text("Masukkan akun untuk masuk"),
                                   ),
-                                  const InputField(Icon(Icons.email)),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 22),
-                                    child: InputField(Icon(Icons.key)),
+                                  InputField(Icon(Icons.email),
+                                      controller: emailController),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 22),
+                                    child: InputField(const Icon(Icons.key),
+                                        controller: passwordController),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -94,40 +109,61 @@ class _LoginPageState extends State<LoginPage> {
                                       ],
                                     ),
                                   ),
-                                  ElevatedButton(
+                                  ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFF0E7F49),
+                                          backgroundColor: _loading
+                                              ? Colors.white
+                                              : Color(0xFF0E7F49),
                                           fixedSize: Size.fromWidth(
                                               MediaQuery.of(context)
                                                   .size
                                                   .width)),
-                                      onPressed: () {
-                                        Navigator.pushReplacementNamed(
-                                            context, "/main");
+                                      onPressed: () async {
+                                        if (emailController.text.isNotEmpty &&
+                                            passwordController
+                                                .text.isNotEmpty &&
+                                            !_loading) {
+                                          setState(() {
+                                            _loading = true;
+                                          });
+                                          final SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          LoginApi.login(emailController.text,
+                                                  passwordController.text)
+                                              .then((value) {
+                                            prefs.setString(
+                                                "kallaToken", value.token);
+                                            TemplateModel templateModel =
+                                                TemplateModel(
+                                                    value.name, value.token);
+                                            Navigator.pushReplacementNamed(
+                                                context, "/main",
+                                                arguments: templateModel);
+                                          }).catchError((e) {
+                                            setState(() {
+                                              _loading = false;
+                                              messageError = e.toString();
+                                            });
+                                          });
+                                        }
                                       },
-                                      child: const Text("Sign In")),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Row(
-                                      children: [
-                                        Text("Belum punya akun?"),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 5),
-                                          child: GestureDetector(
-                                            child: const Text("Registrasi",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w600)),
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, "/register");
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                      icon: _loading
+                                          ? const SizedBox(
+                                              height: 18,
+                                              width: 18,
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : const SizedBox(),
+                                      label: !_loading
+                                          ? const Text("Sign In")
+                                          : const Text("")),
+                                  if (messageError != null && !_loading)
+                                    Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Modal(messageError!))
                                 ]),
                           ),
                         ),

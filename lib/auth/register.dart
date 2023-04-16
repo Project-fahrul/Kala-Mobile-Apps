@@ -55,28 +55,28 @@ class _RegisterPageState extends State<RegisterPage> {
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: Text("Nama"),
                                   ),
-                                  const InputField(Icon(Icons.person)),
-                                  const Padding(
+                                  InputField(Icon(Icons.person)),
+                                  Padding(
                                     padding: EdgeInsets.only(top: 16),
                                     child: Text("Email"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 10),
                                     child: InputField(Icon(Icons.email)),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 16),
                                     child: Text("Password"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 10),
                                     child: InputField(Icon(Icons.key)),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 16),
                                     child: Text("Konfirmasi Password"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding:
                                         EdgeInsets.only(top: 10, bottom: 18),
                                     child: InputField(Icon(Icons.key)),

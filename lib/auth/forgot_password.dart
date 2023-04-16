@@ -1,4 +1,6 @@
+import 'package:customer_retention/api/forgot_password_api.dart';
 import 'package:customer_retention/component/input_field.dart';
+import 'package:customer_retention/component/modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -11,6 +13,9 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  TextEditingController _controller = TextEditingController(text: "");
+  bool _loading = false;
+  String? message;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,22 +60,47 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: Text("Email"),
                                   ),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(bottom: 18),
-                                    child: InputField(Icon(Icons.email)),
+                                    child: InputField(Icon(Icons.email),
+                                        controller: _controller),
                                   ),
-                                  ElevatedButton(
+                                  ElevatedButton.icon(
+                                      icon: _loading
+                                          ? const SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : const SizedBox(),
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: Color(0xFF0E7F49),
                                           fixedSize: Size.fromWidth(
                                               MediaQuery.of(context)
                                                   .size
                                                   .width)),
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, "/confirm_token");
+                                      onPressed: () async {
+                                        if (!_loading &&
+                                            _controller.text.isNotEmpty) {
+                                          String messageTemp = "";
+                                          setState(() {
+                                            _loading = true;
+                                          });
+                                          if (await ForgotpasswordApi
+                                              .verifyEmail(_controller.text)) {
+                                            messageTemp =
+                                                "Password sementara telah dikirim ke email Anda";
+                                          } else {
+                                            messageTemp = "Email tidak dikenal";
+                                          }
+                                          setState(() {
+                                            _loading = false;
+                                            message = messageTemp;
+                                          });
+                                        }
                                       },
-                                      child: const Text("Konfirmasi Email")),
+                                      label: const Text("Konfirmasi Email")),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Row(
@@ -91,6 +121,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                       ],
                                     ),
                                   ),
+                                  if (message != null)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Modal(message!),
+                                    )
                                 ]),
                           ),
                         ),
