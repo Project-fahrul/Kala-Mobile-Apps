@@ -22,6 +22,9 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
 mixin _$LoginResponse {
   String get token => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String get phoneNumber => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +38,8 @@ abstract class $LoginResponseCopyWith<$Res> {
           LoginResponse value, $Res Function(LoginResponse) then) =
       _$LoginResponseCopyWithImpl<$Res, LoginResponse>;
   @useResult
-  $Res call({String token, String name});
+  $Res call(
+      {String token, String name, String phoneNumber, String email, int id});
 }
 
 /// @nodoc
@@ -53,6 +57,9 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
   $Res call({
     Object? token = null,
     Object? name = null,
+    Object? phoneNumber = null,
+    Object? email = null,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
       token: null == token
@@ -63,6 +70,18 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -75,7 +94,8 @@ abstract class _$$_LoginResponseCopyWith<$Res>
       __$$_LoginResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String token, String name});
+  $Res call(
+      {String token, String name, String phoneNumber, String email, int id});
 }
 
 /// @nodoc
@@ -91,6 +111,9 @@ class __$$_LoginResponseCopyWithImpl<$Res>
   $Res call({
     Object? token = null,
     Object? name = null,
+    Object? phoneNumber = null,
+    Object? email = null,
+    Object? id = null,
   }) {
     return _then(_$_LoginResponse(
       token: null == token
@@ -101,6 +124,18 @@ class __$$_LoginResponseCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -108,7 +143,12 @@ class __$$_LoginResponseCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_LoginResponse implements _LoginResponse {
-  _$_LoginResponse({required this.token, required this.name});
+  _$_LoginResponse(
+      {required this.token,
+      required this.name,
+      required this.phoneNumber,
+      required this.email,
+      required this.id});
 
   factory _$_LoginResponse.fromJson(Map<String, dynamic> json) =>
       _$$_LoginResponseFromJson(json);
@@ -117,10 +157,16 @@ class _$_LoginResponse implements _LoginResponse {
   final String token;
   @override
   final String name;
+  @override
+  final String phoneNumber;
+  @override
+  final String email;
+  @override
+  final int id;
 
   @override
   String toString() {
-    return 'LoginResponse(token: $token, name: $name)';
+    return 'LoginResponse(token: $token, name: $name, phoneNumber: $phoneNumber, email: $email, id: $id)';
   }
 
   @override
@@ -129,12 +175,17 @@ class _$_LoginResponse implements _LoginResponse {
         (other.runtimeType == runtimeType &&
             other is _$_LoginResponse &&
             (identical(other.token, token) || other.token == token) &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, token, name);
+  int get hashCode =>
+      Object.hash(runtimeType, token, name, phoneNumber, email, id);
 
   @JsonKey(ignore: true)
   @override
@@ -153,7 +204,10 @@ class _$_LoginResponse implements _LoginResponse {
 abstract class _LoginResponse implements LoginResponse {
   factory _LoginResponse(
       {required final String token,
-      required final String name}) = _$_LoginResponse;
+      required final String name,
+      required final String phoneNumber,
+      required final String email,
+      required final int id}) = _$_LoginResponse;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
       _$_LoginResponse.fromJson;
@@ -162,6 +216,12 @@ abstract class _LoginResponse implements LoginResponse {
   String get token;
   @override
   String get name;
+  @override
+  String get phoneNumber;
+  @override
+  String get email;
+  @override
+  int get id;
   @override
   @JsonKey(ignore: true)
   _$$_LoginResponseCopyWith<_$_LoginResponse> get copyWith =>

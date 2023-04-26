@@ -52,7 +52,7 @@ class ListItemEvidance extends StatelessWidget {
             ],
           ),
           Icon(Icons.check_circle_outline_outlined,
-              color: !evidanceModel.isUploaded
+              color: evidanceModel.isUploaded == 0
                   ? const Color(0xFFE0E0E0)
                   : const Color(0xFF3C8F6C))
         ],

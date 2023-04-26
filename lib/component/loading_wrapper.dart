@@ -13,8 +13,8 @@ class LoadingWrapper extends StatefulWidget {
 
 class LoadingWrapperController {
   LoadingWrapperController({this.listener});
-  bool _load = false;
-  Function? listener;
+  bool _load = false, _error = false;
+  Function? listener, _callback;
 
   void toggleLoading() {
     _load = !_load;
@@ -30,7 +30,11 @@ class LoadingWrapperController {
     }
   }
 
+  void setCallback(c) => _callback = c;
+  get getCallback => _callback;
+
   bool get isLoad => _load;
+  get error => _error;
 }
 
 class _LoadingWrapperState extends State<LoadingWrapper> {

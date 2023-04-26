@@ -5,4 +5,5 @@ class Constant {
 
   static final String Media_Content_Type = 'Content-Type';
   static final String Media_Type_JSON = 'application/json; charset=UTF-8';
+  static final String AUTHENTICATION = "AUTHENTICATION";
 }

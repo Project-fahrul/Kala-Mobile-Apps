@@ -2,14 +2,22 @@
 
 import 'dart:typed_data';
 
+import 'package:customer_retention/model/evidance_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MyImagePicker extends StatefulWidget {
-  const MyImagePicker({super.key});
+  MyImagePicker(this.imageByte, {super.key, this.link});
+  ImageByte imageByte;
+  String? link;
 
   @override
   State<MyImagePicker> createState() => _MyImagePickerState();
+}
+
+class ImageByte {
+  ImageByte(this.file);
+  XFile? file;
 }
 
 class _MyImagePickerState extends State<MyImagePicker> {
@@ -22,6 +30,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
       children: [
         GestureDetector(
           onTap: () {
+            if (widget.link != null) return;
             picker
                 .pickImage(source: ImageSource.gallery)
                 .then((file) => file == null
@@ -29,10 +38,10 @@ class _MyImagePickerState extends State<MyImagePicker> {
                         error = true;
                       })
                     : setState(() {
-                        file
-                            .readAsBytes()
-                            .then((value) => _image = value)
-                            .catchError((e) {
+                        widget.imageByte.file = file;
+                        file.readAsBytes().then((value) {
+                          _image = value;
+                        }).catchError((e) {
                           // ignore: avoid_print
                           print(e.toString());
                         });
@@ -48,14 +57,16 @@ class _MyImagePickerState extends State<MyImagePicker> {
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: const Color(0xFF3D916C)),
                   borderRadius: BorderRadius.circular(4)),
-              child: _image == null
-                  ? Text(!error
-                      ? "Gambar belum dipilih,\nKetuk untuk memilih"
-                      : "Opps Ada kesalah load image. Mohon ulangi.")
-                  : Image.memory(
-                      _image!,
-                      height: double.infinity,
-                    )),
+              child: widget.link != null
+                  ? Image.network(widget.link!)
+                  : _image == null
+                      ? Text(!error
+                          ? "Gambar belum dipilih,\nKetuk untuk memilih"
+                          : "Opps Ada kesalah load image. Mohon ulangi.")
+                      : Image.memory(
+                          _image!,
+                          height: double.infinity,
+                        )),
         ),
       ],
     );

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  InputField(this._icon, {super.key, this.isPassword = false, this.controller});
+  InputField(this._icon,
+      {super.key,
+      this.isPassword = false,
+      this.controller,
+      this.readOnly = false});
   Icon _icon;
   TextEditingController? controller;
   bool isPassword;
+  bool readOnly;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,6 +20,7 @@ class InputField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
         child: TextFormField(
+          readOnly: readOnly,
           controller: controller,
           obscureText: isPassword,
           decoration: InputDecoration(

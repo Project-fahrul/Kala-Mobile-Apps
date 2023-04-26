@@ -21,9 +21,13 @@ EvidanceModel _$EvidanceModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$EvidanceModel {
   String get customerName => throw _privateConstructorUsedError;
+  int get customerId => throw _privateConstructorUsedError;
   String get evidanceType => throw _privateConstructorUsedError;
   DateTime get deadLine => throw _privateConstructorUsedError;
-  bool get isUploaded => throw _privateConstructorUsedError;
+  String get comment => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  String? get pesan => throw _privateConstructorUsedError;
+  int get isUploaded => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,9 +43,13 @@ abstract class $EvidanceModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String customerName,
+      int customerId,
       String evidanceType,
       DateTime deadLine,
-      bool isUploaded});
+      String comment,
+      String content,
+      String? pesan,
+      int isUploaded});
 }
 
 /// @nodoc
@@ -58,8 +66,12 @@ class _$EvidanceModelCopyWithImpl<$Res, $Val extends EvidanceModel>
   @override
   $Res call({
     Object? customerName = null,
+    Object? customerId = null,
     Object? evidanceType = null,
     Object? deadLine = null,
+    Object? comment = null,
+    Object? content = null,
+    Object? pesan = freezed,
     Object? isUploaded = null,
   }) {
     return _then(_value.copyWith(
@@ -67,6 +79,10 @@ class _$EvidanceModelCopyWithImpl<$Res, $Val extends EvidanceModel>
           ? _value.customerName
           : customerName // ignore: cast_nullable_to_non_nullable
               as String,
+      customerId: null == customerId
+          ? _value.customerId
+          : customerId // ignore: cast_nullable_to_non_nullable
+              as int,
       evidanceType: null == evidanceType
           ? _value.evidanceType
           : evidanceType // ignore: cast_nullable_to_non_nullable
@@ -75,10 +91,22 @@ class _$EvidanceModelCopyWithImpl<$Res, $Val extends EvidanceModel>
           ? _value.deadLine
           : deadLine // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      comment: null == comment
+          ? _value.comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as String,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      pesan: freezed == pesan
+          ? _value.pesan
+          : pesan // ignore: cast_nullable_to_non_nullable
+              as String?,
       isUploaded: null == isUploaded
           ? _value.isUploaded
           : isUploaded // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as int,
     ) as $Val);
   }
 }
@@ -93,9 +121,13 @@ abstract class _$$_EvidanceModelCopyWith<$Res>
   @useResult
   $Res call(
       {String customerName,
+      int customerId,
       String evidanceType,
       DateTime deadLine,
-      bool isUploaded});
+      String comment,
+      String content,
+      String? pesan,
+      int isUploaded});
 }
 
 /// @nodoc
@@ -110,8 +142,12 @@ class __$$_EvidanceModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? customerName = null,
+    Object? customerId = null,
     Object? evidanceType = null,
     Object? deadLine = null,
+    Object? comment = null,
+    Object? content = null,
+    Object? pesan = freezed,
     Object? isUploaded = null,
   }) {
     return _then(_$_EvidanceModel(
@@ -119,6 +155,10 @@ class __$$_EvidanceModelCopyWithImpl<$Res>
           ? _value.customerName
           : customerName // ignore: cast_nullable_to_non_nullable
               as String,
+      customerId: null == customerId
+          ? _value.customerId
+          : customerId // ignore: cast_nullable_to_non_nullable
+              as int,
       evidanceType: null == evidanceType
           ? _value.evidanceType
           : evidanceType // ignore: cast_nullable_to_non_nullable
@@ -127,10 +167,22 @@ class __$$_EvidanceModelCopyWithImpl<$Res>
           ? _value.deadLine
           : deadLine // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      comment: null == comment
+          ? _value.comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as String,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      pesan: freezed == pesan
+          ? _value.pesan
+          : pesan // ignore: cast_nullable_to_non_nullable
+              as String?,
       isUploaded: null == isUploaded
           ? _value.isUploaded
           : isUploaded // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as int,
     ));
   }
 }
@@ -140,8 +192,12 @@ class __$$_EvidanceModelCopyWithImpl<$Res>
 class _$_EvidanceModel implements _EvidanceModel {
   const _$_EvidanceModel(
       {required this.customerName,
+      required this.customerId,
       required this.evidanceType,
       required this.deadLine,
+      this.comment = "",
+      this.content = "",
+      this.pesan,
       required this.isUploaded});
 
   factory _$_EvidanceModel.fromJson(Map<String, dynamic> json) =>
@@ -150,15 +206,25 @@ class _$_EvidanceModel implements _EvidanceModel {
   @override
   final String customerName;
   @override
+  final int customerId;
+  @override
   final String evidanceType;
   @override
   final DateTime deadLine;
   @override
-  final bool isUploaded;
+  @JsonKey()
+  final String comment;
+  @override
+  @JsonKey()
+  final String content;
+  @override
+  final String? pesan;
+  @override
+  final int isUploaded;
 
   @override
   String toString() {
-    return 'EvidanceModel(customerName: $customerName, evidanceType: $evidanceType, deadLine: $deadLine, isUploaded: $isUploaded)';
+    return 'EvidanceModel(customerName: $customerName, customerId: $customerId, evidanceType: $evidanceType, deadLine: $deadLine, comment: $comment, content: $content, pesan: $pesan, isUploaded: $isUploaded)';
   }
 
   @override
@@ -168,18 +234,23 @@ class _$_EvidanceModel implements _EvidanceModel {
             other is _$_EvidanceModel &&
             (identical(other.customerName, customerName) ||
                 other.customerName == customerName) &&
+            (identical(other.customerId, customerId) ||
+                other.customerId == customerId) &&
             (identical(other.evidanceType, evidanceType) ||
                 other.evidanceType == evidanceType) &&
             (identical(other.deadLine, deadLine) ||
                 other.deadLine == deadLine) &&
+            (identical(other.comment, comment) || other.comment == comment) &&
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.pesan, pesan) || other.pesan == pesan) &&
             (identical(other.isUploaded, isUploaded) ||
                 other.isUploaded == isUploaded));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, customerName, evidanceType, deadLine, isUploaded);
+  int get hashCode => Object.hash(runtimeType, customerName, customerId,
+      evidanceType, deadLine, comment, content, pesan, isUploaded);
 
   @JsonKey(ignore: true)
   @override
@@ -198,9 +269,13 @@ class _$_EvidanceModel implements _EvidanceModel {
 abstract class _EvidanceModel implements EvidanceModel {
   const factory _EvidanceModel(
       {required final String customerName,
+      required final int customerId,
       required final String evidanceType,
       required final DateTime deadLine,
-      required final bool isUploaded}) = _$_EvidanceModel;
+      final String comment,
+      final String content,
+      final String? pesan,
+      required final int isUploaded}) = _$_EvidanceModel;
 
   factory _EvidanceModel.fromJson(Map<String, dynamic> json) =
       _$_EvidanceModel.fromJson;
@@ -208,11 +283,19 @@ abstract class _EvidanceModel implements EvidanceModel {
   @override
   String get customerName;
   @override
+  int get customerId;
+  @override
   String get evidanceType;
   @override
   DateTime get deadLine;
   @override
-  bool get isUploaded;
+  String get comment;
+  @override
+  String get content;
+  @override
+  String? get pesan;
+  @override
+  int get isUploaded;
   @override
   @JsonKey(ignore: true)
   _$$_EvidanceModelCopyWith<_$_EvidanceModel> get copyWith =>

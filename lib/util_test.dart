@@ -9,27 +9,32 @@ class UtilTest {
           customerName: "H. TALLASA",
           evidanceType: "Service",
           deadLine: DateTime.parse("2023-03-27"),
-          isUploaded: false),
+          isUploaded: 0,
+          customerId: 1),
       EvidanceModel(
           customerName: "KEMENTERIAN AGAMA KAB. BANTAENG",
           evidanceType: "Service",
           deadLine: DateTime.parse("2023-03-27"),
-          isUploaded: false),
+          isUploaded: 0,
+          customerId: 1),
       EvidanceModel(
           customerName: "A basran tahir",
           evidanceType: "Service",
           deadLine: DateTime.parse("2023-03-27"),
-          isUploaded: false),
+          isUploaded: 0,
+          customerId: 1),
       EvidanceModel(
           customerName: "A. Ainun maqshuroh",
           evidanceType: "Service",
           deadLine: DateTime.parse("2023-03-27"),
-          isUploaded: false),
+          isUploaded: 0,
+          customerId: 1),
       EvidanceModel(
           customerName: "A. Akbar Tanjung",
           evidanceType: "Service",
           deadLine: DateTime.parse("2023-03-27"),
-          isUploaded: false),
+          isUploaded: 0,
+          customerId: 1),
     ], progress: 40);
   }
 

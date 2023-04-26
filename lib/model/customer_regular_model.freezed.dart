@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+CustomerRegularModel _$CustomerRegularModelFromJson(Map<String, dynamic> json) {
+  return _CustomerRegularModel.fromJson(json);
+}
+
 /// @nodoc
 mixin _$CustomerRegularModel {
   String get name => throw _privateConstructorUsedError;
@@ -42,7 +46,12 @@ mixin _$CustomerRegularModel {
   set leasing(String value) => throw _privateConstructorUsedError;
   int get totalAngsuran => throw _privateConstructorUsedError;
   set totalAngsuran(int value) => throw _privateConstructorUsedError;
+  int get customerId => throw _privateConstructorUsedError;
+  set customerId(int value) => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
+  set id(int value) => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $CustomerRegularModelCopyWith<CustomerRegularModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -67,7 +76,9 @@ abstract class $CustomerRegularModelCopyWith<$Res> {
       String noRangka,
       String typeKendaraan,
       String leasing,
-      int totalAngsuran});
+      int totalAngsuran,
+      int customerId,
+      int id});
 }
 
 /// @nodoc
@@ -97,6 +108,8 @@ class _$CustomerRegularModelCopyWithImpl<$Res,
     Object? typeKendaraan = null,
     Object? leasing = null,
     Object? totalAngsuran = null,
+    Object? customerId = null,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -151,6 +164,14 @@ class _$CustomerRegularModelCopyWithImpl<$Res,
           ? _value.totalAngsuran
           : totalAngsuran // ignore: cast_nullable_to_non_nullable
               as int,
+      customerId: null == customerId
+          ? _value.customerId
+          : customerId // ignore: cast_nullable_to_non_nullable
+              as int,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -176,7 +197,9 @@ abstract class _$$_CustomerRegularModelCopyWith<$Res>
       String noRangka,
       String typeKendaraan,
       String leasing,
-      int totalAngsuran});
+      int totalAngsuran,
+      int customerId,
+      int id});
 }
 
 /// @nodoc
@@ -203,6 +226,8 @@ class __$$_CustomerRegularModelCopyWithImpl<$Res>
     Object? typeKendaraan = null,
     Object? leasing = null,
     Object? totalAngsuran = null,
+    Object? customerId = null,
+    Object? id = null,
   }) {
     return _then(_$_CustomerRegularModel(
       name: null == name
@@ -257,12 +282,20 @@ class __$$_CustomerRegularModelCopyWithImpl<$Res>
           ? _value.totalAngsuran
           : totalAngsuran // ignore: cast_nullable_to_non_nullable
               as int,
+      customerId: null == customerId
+          ? _value.customerId
+          : customerId // ignore: cast_nullable_to_non_nullable
+              as int,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_CustomerRegularModel implements _CustomerRegularModel {
   _$_CustomerRegularModel(
       {required this.name,
@@ -277,7 +310,12 @@ class _$_CustomerRegularModel implements _CustomerRegularModel {
       required this.noRangka,
       required this.typeKendaraan,
       required this.leasing,
-      required this.totalAngsuran});
+      required this.totalAngsuran,
+      this.customerId = -1,
+      required this.id});
+
+  factory _$_CustomerRegularModel.fromJson(Map<String, dynamic> json) =>
+      _$$_CustomerRegularModelFromJson(json);
 
   @override
   String name;
@@ -305,10 +343,15 @@ class _$_CustomerRegularModel implements _CustomerRegularModel {
   String leasing;
   @override
   int totalAngsuran;
+  @override
+  @JsonKey()
+  int customerId;
+  @override
+  int id;
 
   @override
   String toString() {
-    return 'CustomerRegularModel(name: $name, address: $address, noHp: $noHp, salesId: $salesId, tglStnk: $tglStnk, tglLahir: $tglLahir, tglDec: $tglDec, tglAngsuran: $tglAngsuran, typeAngsuran: $typeAngsuran, noRangka: $noRangka, typeKendaraan: $typeKendaraan, leasing: $leasing, totalAngsuran: $totalAngsuran)';
+    return 'CustomerRegularModel(name: $name, address: $address, noHp: $noHp, salesId: $salesId, tglStnk: $tglStnk, tglLahir: $tglLahir, tglDec: $tglDec, tglAngsuran: $tglAngsuran, typeAngsuran: $typeAngsuran, noRangka: $noRangka, typeKendaraan: $typeKendaraan, leasing: $leasing, totalAngsuran: $totalAngsuran, customerId: $customerId, id: $id)';
   }
 
   @JsonKey(ignore: true)
@@ -317,6 +360,13 @@ class _$_CustomerRegularModel implements _CustomerRegularModel {
   _$$_CustomerRegularModelCopyWith<_$_CustomerRegularModel> get copyWith =>
       __$$_CustomerRegularModelCopyWithImpl<_$_CustomerRegularModel>(
           this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_CustomerRegularModelToJson(
+      this,
+    );
+  }
 }
 
 abstract class _CustomerRegularModel implements CustomerRegularModel {
@@ -333,7 +383,12 @@ abstract class _CustomerRegularModel implements CustomerRegularModel {
       required String noRangka,
       required String typeKendaraan,
       required String leasing,
-      required int totalAngsuran}) = _$_CustomerRegularModel;
+      required int totalAngsuran,
+      int customerId,
+      required int id}) = _$_CustomerRegularModel;
+
+  factory _CustomerRegularModel.fromJson(Map<String, dynamic> json) =
+      _$_CustomerRegularModel.fromJson;
 
   @override
   String get name;
@@ -374,6 +429,12 @@ abstract class _CustomerRegularModel implements CustomerRegularModel {
   @override
   int get totalAngsuran;
   set totalAngsuran(int value);
+  @override
+  int get customerId;
+  set customerId(int value);
+  @override
+  int get id;
+  set id(int value);
   @override
   @JsonKey(ignore: true)
   _$$_CustomerRegularModelCopyWith<_$_CustomerRegularModel> get copyWith =>

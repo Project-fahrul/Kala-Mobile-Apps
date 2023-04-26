@@ -64,7 +64,8 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   Image.asset("assets/image/kalla2.png"),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 3),
+                                    padding:
+                                        const EdgeInsets.only(top: 3, left: 38),
                                     child:
                                         Image.asset("assets/image/kalla1.png"),
                                   ),
@@ -78,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 22),
                                     child: InputField(const Icon(Icons.key),
+                                        isPassword: true,
                                         controller: passwordController),
                                   ),
                                   Padding(
@@ -136,7 +138,11 @@ class _LoginPageState extends State<LoginPage> {
                                                 "kallaToken", value.token);
                                             TemplateModel templateModel =
                                                 TemplateModel(
-                                                    value.name, value.token);
+                                                    value.name,
+                                                    value.token,
+                                                    value.id,
+                                                    value.phoneNumber,
+                                                    value.email);
                                             Navigator.pushReplacementNamed(
                                                 context, "/main",
                                                 arguments: templateModel);

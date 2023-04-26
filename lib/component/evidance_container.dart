@@ -1,3 +1,4 @@
+import 'package:customer_retention/api/evidance_api.dart';
 import 'package:customer_retention/component/input_field.dart';
 import 'package:customer_retention/component/list_item_evidance.dart';
 import 'package:customer_retention/component/my_image_picker.dart';
@@ -6,9 +7,12 @@ import 'package:customer_retention/model/evidance_model.dart';
 import 'package:flutter/material.dart';
 
 class EvidanceContainer extends StatefulWidget {
-  EvidanceContainer(this.data, this.textSearch, {super.key});
+  EvidanceContainer(this.data, this.textSearch, this.token, this.callBack,
+      {super.key});
   EvidanceResponse data;
   String textSearch;
+  String token;
+  Function(EvidanceResponse) callBack;
 
   @override
   State<EvidanceContainer> createState() => _EvidanceContainerState();
@@ -17,6 +21,9 @@ class EvidanceContainer extends StatefulWidget {
 class _EvidanceContainerState extends State<EvidanceContainer> {
   String filterEvidance = "Semua";
   List<String> filters = ["Semua", "Belum Terkirim", "Terkirim"];
+  ImageByte _imageByte = new ImageByte(null);
+  bool loading = false;
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +31,8 @@ class _EvidanceContainerState extends State<EvidanceContainer> {
         .where((element) => filterEvidance == "Semua"
             ? true
             : filterEvidance == "Terkirim"
-                ? element.isUploaded
-                : !element.isUploaded)
+                ? (element.isUploaded == 1)
+                : (element.isUploaded == 0))
         .where((element) => widget.textSearch == ""
             ? true
             : element.customerName.contains(widget.textSearch))
@@ -77,7 +84,7 @@ class _EvidanceContainerState extends State<EvidanceContainer> {
                   })
             ],
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 5, bottom: 18),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -85,7 +92,7 @@ class _EvidanceContainerState extends State<EvidanceContainer> {
                 backgroundColor: Color(0xFFE0E0E0),
                 color: Color(0xFFF5C056),
                 minHeight: 8,
-                value: 0.4,
+                value: widget.data.progress.toDouble() / 100,
               ),
             ),
           ),
@@ -109,6 +116,10 @@ class _EvidanceContainerState extends State<EvidanceContainer> {
                           const Divider(height: 25, color: Colors.transparent),
                       itemBuilder: (ctx, i) => GestureDetector(
                         onTap: () {
+                          _controller.clear();
+                          if (dataFilter.elementAt(i).isUploaded == 1) {
+                            _controller.text = dataFilter.elementAt(i).comment;
+                          }
                           showModalBottomSheet(
                               useSafeArea: true,
                               isScrollControlled: true,
@@ -199,7 +210,14 @@ class _EvidanceContainerState extends State<EvidanceContainer> {
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 18),
-                                        child: InputField(Icon(Icons.message)),
+                                        child: InputField(
+                                          Icon(Icons.message),
+                                          controller: _controller,
+                                          readOnly: dataFilter
+                                                  .elementAt(i)
+                                                  .isUploaded ==
+                                              1,
+                                        ),
                                       ),
                                       const Padding(
                                         padding: EdgeInsets.only(
@@ -211,24 +229,75 @@ class _EvidanceContainerState extends State<EvidanceContainer> {
                                           "Bukti Evidance",
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 18),
-                                        child: MyImagePicker(),
-                                      ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10,
-                                            bottom: 30,
-                                            left: 18,
-                                            right: 18),
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    Color(0xFF3D916C)),
-                                            onPressed: () {},
-                                            child: const Text("Kirim")),
-                                      )
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 18),
+                                        child: MyImagePicker(
+                                          _imageByte,
+                                          link: dataFilter
+                                                      .elementAt(i)
+                                                      .content ==
+                                                  ""
+                                              ? null
+                                              : dataFilter.elementAt(i).content,
+                                        ),
+                                      ),
+                                      if (dataFilter.elementAt(i).isUploaded ==
+                                          0)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 30,
+                                              left: 18,
+                                              right: 18),
+                                          child: StatefulBuilder(
+                                            builder: (_, stateful) =>
+                                                ElevatedButton.icon(
+                                                    icon: loading
+                                                        ? const SizedBox(
+                                                            height: 18,
+                                                            width: 18,
+                                                            child:
+                                                                CircularProgressIndicator(),
+                                                          )
+                                                        : const SizedBox(),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                const Color(
+                                                                    0xFF3D916C)),
+                                                    onPressed: () async {
+                                                      if (_imageByte.file !=
+                                                              null &&
+                                                          !loading) {
+                                                        stateful(() {
+                                                          loading = true;
+                                                        });
+                                                        await EvidanceApi
+                                                            .postEvidance(
+                                                                widget.token,
+                                                                _imageByte
+                                                                    .file!,
+                                                                dataFilter
+                                                                    .elementAt(
+                                                                        i),
+                                                                _controller
+                                                                    .text);
+                                                        final d =
+                                                            await EvidanceApi
+                                                                .getEvidance(
+                                                                    widget
+                                                                        .token);
+                                                        widget.callBack(d);
+                                                        stateful(() {
+                                                          loading = false;
+                                                        });
+                                                        Navigator.pop(context);
+                                                      }
+                                                    },
+                                                    label: const Text("Kirim")),
+                                          ),
+                                        )
                                     ],
                                   ));
                         },

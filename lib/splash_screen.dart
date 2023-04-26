@@ -14,8 +14,11 @@ class SplashScreen extends StatelessWidget {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final token = await prefs.getString("kallaToken");
       if (token != null) {
+        print("validate token");
         LoginApi.validate(token).then((value) {
-          TemplateModel model = TemplateModel(value.name, token);
+          TemplateModel model = TemplateModel(
+              value.name, token, value.id, value.phoneNumber, value.email);
+          print("validate token finish");
           Navigator.pushReplacementNamed(context, "/main", arguments: model);
         }).onError((error, stackTrace) {
           Navigator.pushReplacementNamed(context, "/login");

@@ -1,11 +1,14 @@
+import 'package:customer_retention/model/customer_regular_model.dart';
 import 'package:customer_retention/model/dao/customer_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class ListItemCustomer extends StatelessWidget {
-  ListItemCustomer({super.key, required this.customerResponse});
-  CustomerResponse customerResponse;
+  ListItemCustomer(
+      {super.key, required this.name, required this.typeKendaraan});
+  String name;
+  String typeKendaraan;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class ListItemCustomer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              customerResponse.customerName,
+              name,
               style: const TextStyle(
                 color: Color(0xFF030303),
                 fontSize: 16,
@@ -37,7 +40,7 @@ class ListItemCustomer extends StatelessWidget {
                       left: 5,
                     ),
                     child: Text(
-                      customerResponse.tipeKendaraan,
+                      typeKendaraan,
                       style: const TextStyle(fontSize: 13),
                     ),
                   )

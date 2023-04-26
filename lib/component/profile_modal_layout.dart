@@ -1,11 +1,16 @@
+import 'package:customer_retention/api/profile_api.dart';
+import 'package:customer_retention/model/dao/template_model.dart';
 import 'package:customer_retention/model/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class ProfileModalLayout extends StatefulWidget {
-  ProfileModalLayout({super.key, required this.profileModel});
+  ProfileModalLayout(this.callBack,
+      {super.key, required this.templateModel, required this.profileModel});
   ProfileModel profileModel;
+  TemplateModel templateModel;
+  Function callBack;
 
   @override
   State<ProfileModalLayout> createState() => _ProfileModalLayoutState();
@@ -71,7 +76,18 @@ class _ProfileModalLayoutState extends State<ProfileModalLayout> {
                                     },
                                     child: const Text("Tidak")),
                                 TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      Navigator.pop(contexx);
+                                      widget.templateModel.setName =
+                                          profileModelEdit.name;
+                                      widget.templateModel.setPhoneNumber =
+                                          profileModelEdit.phoneNumber;
+                                      profileModelEdit.name;
+                                      await ProfileApi.update(
+                                          profileModelEdit.name,
+                                          profileModelEdit.phoneNumber,
+                                          widget.templateModel.token);
+                                      widget.callBack();
                                       Navigator.pop(contexx);
                                     },
                                     child: const Text("Ya")),
@@ -112,35 +128,6 @@ class _ProfileModalLayoutState extends State<ProfileModalLayout> {
                       controller:
                           TextEditingController(text: profileModelEdit.name),
                       readOnly: formReadOnly,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero),
-                    ),
-                  ),
-                  const Divider(
-                    height: 18,
-                    color: Colors.transparent,
-                  ),
-                  const Text(
-                    "Email",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                width: formReadOnly ? 1 : 2,
-                                color: formReadOnly
-                                    ? Color.fromARGB(255, 131, 131, 131)
-                                    : Color(0xFF0E7F49)))),
-                    child: TextFormField(
-                      onChanged: (value) => profileModelEdit.email = value,
-                      readOnly: formReadOnly,
-                      controller:
-                          TextEditingController(text: profileModelEdit.email),
                       decoration: const InputDecoration(
                           border: InputBorder.none,
                           isDense: true,

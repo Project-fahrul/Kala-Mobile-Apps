@@ -1,53 +1,46 @@
+import 'dart:math';
+
 import 'package:customer_retention/api/customer_api.dart';
 import 'package:customer_retention/component/input_field.dart';
 import 'package:customer_retention/component/loading_wrapper.dart';
 import 'package:customer_retention/component/modal.dart';
 import 'package:customer_retention/model/customer_regular_model.dart';
+import 'package:customer_retention/model/dao/customer_prospek_model.dart';
+import 'package:customer_retention/model/dao/kendaraan_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-class CustomerRegular extends StatefulWidget {
-  CustomerRegular(
+class CustomerProspekComp extends StatefulWidget {
+  CustomerProspekComp(
       {super.key,
-      required this.customerRegularModel,
-      required this.controller,
-      required this.token});
-  CustomerRegularModel customerRegularModel;
+      required this.kendaraan,
+      required this.customerProspekModel,
+      required this.controller});
+  CustomerProspekModel customerProspekModel;
   LoadingWrapperController controller;
-  String token;
+  List<KendaraanModel> kendaraan;
 
   @override
-  State<CustomerRegular> createState() => _CustomerRegularState();
+  State<CustomerProspekComp> createState() => _CustomerProspekCompState();
 }
 
-class _CustomerRegularState extends State<CustomerRegular> {
-  TextEditingController controllerAngsuran = TextEditingController();
-  TextEditingController controllerLahir = TextEditingController();
-  TextEditingController controllerStnk = TextEditingController();
-  TextEditingController controllerService = TextEditingController();
-  bool angsuranEnable = false;
+class _CustomerProspekCompState extends State<CustomerProspekComp> {
+  TextEditingController controllerUlangTahun = TextEditingController();
+  TextEditingController controllerFollowUp = TextEditingController();
+  TextEditingController controllerJumlah = TextEditingController(text: "0");
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-  late TextEditingController totalAngsuranController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    totalAngsuranController = TextEditingController(
-        text: widget.customerRegularModel.totalAngsuran.toString());
-    controllerAngsuran.text =
-        "${widget.customerRegularModel.tglDec.year}-${widget.customerRegularModel.tglDec.month}-${widget.customerRegularModel.tglDec.day}";
-    controllerLahir.text =
-        "${widget.customerRegularModel.tglLahir.year}-${widget.customerRegularModel.tglLahir.month}-${widget.customerRegularModel.tglLahir.day}";
-    controllerStnk.text =
-        "${widget.customerRegularModel.tglStnk.year}-${widget.customerRegularModel.tglStnk.month}-${widget.customerRegularModel.tglStnk.day}";
-    controllerService.text =
-        "${widget.customerRegularModel.tglAngsuran.year}-${widget.customerRegularModel.tglAngsuran.month}-${widget.customerRegularModel.tglAngsuran.day}";
-
-    angsuranEnable = widget.customerRegularModel.typeAngsuran == "Kredit";
+    controllerUlangTahun.text =
+        "${widget.customerProspekModel.ulangTahun.year}-${widget.customerProspekModel.ulangTahun.month}-${widget.customerProspekModel.ulangTahun.day}";
+    controllerFollowUp.text =
+        "${widget.customerProspekModel.followUp.year}-${widget.customerProspekModel.followUp.month}-${widget.customerProspekModel.followUp.day}";
   }
 
   @override
@@ -65,7 +58,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Form Customer Regular",
+                  "Form Customer Prospek",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -89,8 +82,8 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.name,
-                  onChanged: (val) => widget.customerRegularModel.name = val,
+                  initialValue: widget.customerProspekModel.name,
+                  onChanged: (val) => widget.customerProspekModel.name = val,
                   decoration: const InputDecoration(
                       labelText: "Nama Customer",
                       focusedBorder: UnderlineInputBorder(
@@ -106,8 +99,8 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.address,
-                  onChanged: (val) => widget.customerRegularModel.address = val,
+                  initialValue: widget.customerProspekModel.alamat,
+                  onChanged: (val) => widget.customerProspekModel.alamat = val,
                   decoration: const InputDecoration(
                       labelText: "Alamat Customer",
                       focusedBorder: UnderlineInputBorder(
@@ -123,8 +116,8 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.noHp,
-                  onChanged: (val) => widget.customerRegularModel.noHp = val,
+                  initialValue: widget.customerProspekModel.noHp,
+                  onChanged: (val) => widget.customerProspekModel.noHp = val,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -145,42 +138,6 @@ class _CustomerRegularState extends State<CustomerRegular> {
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
                   onTap: () => {
-                    if (angsuranEnable)
-                      showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2090))
-                          .then((value) {
-                        if (value != null) {
-                          print("parse");
-                          controllerAngsuran.text =
-                              "${value.year}-${value.month}-${value.day}";
-                          widget.customerRegularModel.tglAngsuran =
-                              dateFormat.parse(controllerAngsuran.text);
-                        }
-                      })
-                  },
-                  controller: controllerAngsuran,
-                  readOnly: !angsuranEnable,
-                  decoration: InputDecoration(
-                      filled: !angsuranEnable,
-                      fillColor: Colors.black26,
-                      labelText: "Tanggal Angsuran",
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132))),
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(255, 131, 133, 132)),
-                      border: const UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132)))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-                child: TextFormField(
-                  onTap: () => {
                     showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
@@ -188,16 +145,16 @@ class _CustomerRegularState extends State<CustomerRegular> {
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
-                        controllerStnk.text =
+                        controllerUlangTahun.text =
                             "${value.year}-${value.month}-${value.day}";
-                        widget.customerRegularModel.tglStnk =
-                            dateFormat.parse(controllerStnk.text);
+                        widget.customerProspekModel.ulangTahun =
+                            dateFormat.parse(controllerUlangTahun.text);
                       }
                     })
                   },
-                  controller: controllerStnk,
+                  controller: controllerUlangTahun,
                   decoration: const InputDecoration(
-                      labelText: "Tanggal STNK",
+                      labelText: "Ulang tahun",
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Color.fromARGB(255, 131, 133, 132))),
@@ -219,47 +176,16 @@ class _CustomerRegularState extends State<CustomerRegular> {
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
-                        controllerLahir.text =
+                        controllerFollowUp.text =
                             "${value.year}-${value.month}-${value.day}";
-                        widget.customerRegularModel.tglLahir =
-                            dateFormat.parse(controllerLahir.text);
+                        widget.customerProspekModel.followUp =
+                            dateFormat.parse(controllerFollowUp.text);
                       }
                     })
                   },
-                  controller: controllerLahir,
+                  controller: controllerFollowUp,
                   decoration: const InputDecoration(
-                      labelText: "Tanggal Lahir",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132))),
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132)))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-                child: TextFormField(
-                  onTap: () => {
-                    showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2090))
-                        .then((value) {
-                      if (value != null) {
-                        controllerService.text =
-                            "${value.year}-${value.month}-${value.day}";
-                        widget.customerRegularModel.tglDec =
-                            dateFormat.parse(controllerService.text);
-                      }
-                    })
-                  },
-                  controller: controllerService,
-                  decoration: const InputDecoration(
-                      labelText: "Tanggal Service",
+                      labelText: "Rencana follow up",
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Color.fromARGB(255, 131, 133, 132))),
@@ -282,7 +208,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Tipe angsuran",
+                          "Tipe kendaraan",
                           style: TextStyle(color: Colors.black38, fontSize: 12),
                         ),
                         Divider(
@@ -294,27 +220,66 @@ class _CustomerRegularState extends State<CustomerRegular> {
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton(
                             isDense: true,
-                            value:
-                                widget.customerRegularModel.typeAngsuran == ""
-                                    ? "Tunai"
-                                    : widget.customerRegularModel.typeAngsuran,
-                            items: const [
-                              DropdownMenuItem(
-                                child: Text("Tunai"),
-                                value: "Tunai",
-                              ),
-                              DropdownMenuItem(
-                                child: Text("Kredit"),
-                                value: "Kredit",
-                              )
-                            ],
+                            value: widget.kendaraan
+                                    .where((element) =>
+                                        element.tipeKendaraan ==
+                                        widget
+                                            .customerProspekModel.tipeKendaraan)
+                                    .isEmpty
+                                ? widget.kendaraan.first.tipeKendaraan
+                                : widget.customerProspekModel.tipeKendaraan,
+                            items: widget.kendaraan
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(e.tipeKendaraan),
+                                      value: e.tipeKendaraan,
+                                    ))
+                                .toList(),
                             onChanged: (d) {
                               setState(() {
-                                widget.customerRegularModel.typeAngsuran =
-                                    d ?? "Tunai";
-                                angsuranEnable =
-                                    widget.customerRegularModel.typeAngsuran ==
-                                        "Kredit";
+                                widget.customerProspekModel.tipeKendaraan =
+                                    d.toString();
+                              });
+                            },
+                          )),
+                        ),
+                      ],
+                    ),
+                  )),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                        border:
+                            Border(bottom: BorderSide(color: Colors.black38))),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Status prospek",
+                          style: TextStyle(color: Colors.black38, fontSize: 12),
+                        ),
+                        Divider(
+                          height: 3,
+                          color: Colors.transparent,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                            isDense: true,
+                            value: widget.customerProspekModel.statusProspek,
+                            items: ["LOW", "MEDIUM", "HOT", "SOLD"]
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(e),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            onChanged: (d) {
+                              setState(() {
+                                widget.customerProspekModel.statusProspek =
+                                    d.toString();
                               });
                             },
                           )),
@@ -325,52 +290,31 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.noRangka,
-                  onChanged: (val) =>
-                      widget.customerRegularModel.noRangka = val,
-                  decoration: const InputDecoration(
-                      labelText: "No Rangka",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132))),
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132)))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-                child: TextFormField(
-                  readOnly: !angsuranEnable,
-                  controller: totalAngsuranController,
+                  controller: controllerJumlah,
                   onChanged: (val) {
                     if (val.length > 0) {
                       if (val.characters.characterAt(0) == Characters("0") &&
                           val.length > 1) {
                         // we need to remove the first char
-                        totalAngsuranController.text = val.substring(1);
+                        controllerJumlah.text = val.substring(1);
                         // we need to move the cursor
-                        totalAngsuranController.selection =
-                            TextSelection.collapsed(
-                                offset: totalAngsuranController.text.length);
+                        controllerJumlah.selection = TextSelection.collapsed(
+                            offset: controllerJumlah.text.length);
                       }
-                      widget.customerRegularModel.totalAngsuran =
+                      widget.customerProspekModel.jumlahPertemuan =
                           int.parse(val);
                     } else {
-                      totalAngsuranController.text = "0";
-                      widget.customerRegularModel.totalAngsuran = 0;
+                      controllerJumlah.text = "0";
+                      widget.customerProspekModel.jumlahPertemuan = 0;
                     }
                   },
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ], // Only numb
-                  decoration: InputDecoration(
-                      filled: !angsuranEnable,
+                  decoration: const InputDecoration(
                       fillColor: Colors.black26,
-                      labelText: "Total Angsuran",
+                      labelText: "Jumlah pertemuan",
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Color.fromARGB(255, 131, 133, 132))),
@@ -382,30 +326,13 @@ class _CustomerRegularState extends State<CustomerRegular> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.leasing,
-                  onChanged: (val) => widget.customerRegularModel.leasing = val,
-                  decoration: const InputDecoration(
-                      labelText: "Leasing",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132))),
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132)))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-                child: TextFormField(
-                  initialValue: widget.customerRegularModel.typeKendaraan,
+                  initialValue: widget.customerProspekModel.kendaraanSaatIni,
                   onChanged: (val) =>
-                      widget.customerRegularModel.typeKendaraan = val,
+                      widget.customerProspekModel.kendaraanSaatIni = val,
                   decoration: const InputDecoration(
-                      labelText: "Tipe Kendaraan",
+                      labelText: "Kendaraan saat ini",
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Color.fromARGB(255, 131, 133, 132))),
@@ -416,7 +343,61 @@ class _CustomerRegularState extends State<CustomerRegular> {
                               color: Color.fromARGB(255, 131, 133, 132)))),
                 ),
               ),
-              Divider(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: TextFormField(
+                  initialValue: widget.customerProspekModel.pengeluaranCustomer,
+                  onChanged: (val) =>
+                      widget.customerProspekModel.pengeluaranCustomer = val,
+                  decoration: const InputDecoration(
+                      labelText: "Pengeluaran customer",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 131, 133, 132))),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 131, 133, 132)))),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: TextFormField(
+                  initialValue: widget.customerProspekModel.penghasilanCustomer,
+                  onChanged: (val) =>
+                      widget.customerProspekModel.penghasilanCustomer = val,
+                  decoration: const InputDecoration(
+                      labelText: "Penghasilan customer",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 131, 133, 132))),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 131, 133, 132)))),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: TextFormField(
+                  initialValue: widget.customerProspekModel.isiPembicaraan,
+                  onChanged: (val) =>
+                      widget.customerProspekModel.isiPembicaraan = val,
+                  decoration: const InputDecoration(
+                      labelText: "Isi pembicaraan",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 131, 133, 132))),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 131, 133, 132)))),
+                ),
+              ),
+              const Divider(
                 height: 30,
               )
             ],
