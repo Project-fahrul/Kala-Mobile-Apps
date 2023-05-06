@@ -41,11 +41,7 @@ DateTime getTime() {
     h = 11;
   } else if (d.hour >= 11 && d.hour < 15) {
     h = 15;
-  }
-  // else if (d.hour >= 11 && d.hour < 17) {
-  //   h = 16;
-  // }
-  else {
+  } else {
     h = 8;
     day = 1;
   }

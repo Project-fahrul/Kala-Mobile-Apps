@@ -10,11 +10,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class CustomerRegular extends StatefulWidget {
-  CustomerRegular(
+  CustomerRegular(this.isEdit,
       {super.key,
       required this.customerRegularModel,
       required this.controller,
       required this.token});
+  final bool isEdit;
   CustomerRegularModel customerRegularModel;
   LoadingWrapperController controller;
   String token;
@@ -28,14 +29,31 @@ class _CustomerRegularState extends State<CustomerRegular> {
   TextEditingController controllerLahir = TextEditingController();
   TextEditingController controllerStnk = TextEditingController();
   TextEditingController controllerService = TextEditingController();
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+  TextEditingController noRangkaController = TextEditingController();
+  TextEditingController typeKendaraanController = TextEditingController();
+  TextEditingController totalAngsuranController = TextEditingController();
+  TextEditingController leasingController = TextEditingController();
+
   bool angsuranEnable = false;
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-  late TextEditingController totalAngsuranController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    leasingController.text = widget.customerRegularModel.leasing;
+    nameController.text = widget.customerRegularModel.name;
+    phoneNumberController.text = widget.customerRegularModel.noHp;
+    alamatController.text = widget.customerRegularModel.address;
+    noRangkaController.text = widget.customerRegularModel.noRangka;
+    typeKendaraanController.text = widget.customerRegularModel.typeKendaraan;
+    totalAngsuranController.text =
+        widget.customerRegularModel.totalAngsuran.toString();
+
     totalAngsuranController = TextEditingController(
         text: widget.customerRegularModel.totalAngsuran.toString());
     controllerAngsuran.text =
@@ -72,10 +90,37 @@ class _CustomerRegularState extends State<CustomerRegular> {
                     color: Colors.white,
                   ),
                 ),
-                IconButton(
-                    color: Colors.white,
-                    onPressed: widget.controller.getCallback,
-                    icon: const Icon(Icons.save)),
+                Row(
+                  children: [
+                    IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          print(widget.customerRegularModel);
+                          setState(() {
+                            widget.controller.setError = false;
+                          });
+                          if (widget.customerRegularModel.address.isEmpty ||
+                              widget.customerRegularModel.name.isEmpty ||
+                              widget.customerRegularModel.leasing.isEmpty ||
+                              widget.customerRegularModel.noRangka.isEmpty ||
+                              widget
+                                  .customerRegularModel.typeKendaraan.isEmpty ||
+                              widget.customerRegularModel.noHp.isEmpty) {
+                            setState(() {
+                              widget.controller.setError = true;
+                            });
+                            return;
+                          }
+                          widget.controller.getCallback();
+                        },
+                        icon: const Icon(Icons.save)),
+                    if (widget.isEdit)
+                      IconButton(
+                          color: Colors.white,
+                          onPressed: widget.controller.getCallback,
+                          icon: const Icon(Icons.delete)),
+                  ],
+                )
               ],
             )),
         Expanded(
@@ -89,7 +134,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.name,
+                  controller: nameController,
                   onChanged: (val) => widget.customerRegularModel.name = val,
                   decoration: const InputDecoration(
                       labelText: "Nama Customer",
@@ -106,7 +151,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.address,
+                  controller: alamatController,
                   onChanged: (val) => widget.customerRegularModel.address = val,
                   decoration: const InputDecoration(
                       labelText: "Alamat Customer",
@@ -123,7 +168,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.noHp,
+                  controller: phoneNumberController,
                   onChanged: (val) => widget.customerRegularModel.noHp = val,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -144,12 +189,14 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     if (angsuranEnable)
                       showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
+                              initialDate:
+                                  widget.customerRegularModel.tglAngsuran,
+                              firstDate: DateTime(1945),
                               lastDate: DateTime(2090))
                           .then((value) {
                         if (value != null) {
@@ -180,11 +227,12 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
+                            initialDate: widget.customerRegularModel.tglStnk,
+                            firstDate: DateTime(1945),
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
@@ -211,11 +259,12 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
+                            initialDate: widget.customerRegularModel.tglLahir,
+                            firstDate: DateTime(1945),
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
@@ -242,11 +291,12 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
+                            initialDate: widget.customerRegularModel.tglDec,
+                            firstDate: DateTime(1945),
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
@@ -294,10 +344,12 @@ class _CustomerRegularState extends State<CustomerRegular> {
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton(
                             isDense: true,
-                            value:
-                                widget.customerRegularModel.typeAngsuran == ""
-                                    ? "Tunai"
-                                    : widget.customerRegularModel.typeAngsuran,
+                            value: [
+                              "Tunai",
+                              "Kredit"
+                            ].contains(widget.customerRegularModel.typeAngsuran)
+                                ? widget.customerRegularModel.typeAngsuran
+                                : "Tunai",
                             items: const [
                               DropdownMenuItem(
                                 child: Text("Tunai"),
@@ -325,7 +377,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.noRangka,
+                  controller: noRangkaController,
                   onChanged: (val) =>
                       widget.customerRegularModel.noRangka = val,
                   decoration: const InputDecoration(
@@ -384,8 +436,10 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.leasing,
-                  onChanged: (val) => widget.customerRegularModel.leasing = val,
+                  controller: leasingController,
+                  onChanged: (val) {
+                    widget.customerRegularModel.leasing = val;
+                  },
                   decoration: const InputDecoration(
                       labelText: "Leasing",
                       focusedBorder: UnderlineInputBorder(
@@ -401,7 +455,7 @@ class _CustomerRegularState extends State<CustomerRegular> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerRegularModel.typeKendaraan,
+                  controller: typeKendaraanController,
                   onChanged: (val) =>
                       widget.customerRegularModel.typeKendaraan = val,
                   decoration: const InputDecoration(

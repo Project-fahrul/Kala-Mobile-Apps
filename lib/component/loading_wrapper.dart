@@ -35,6 +35,7 @@ class LoadingWrapperController {
 
   bool get isLoad => _load;
   get error => _error;
+  void set setError(bool error) => _error = error;
 }
 
 class _LoadingWrapperState extends State<LoadingWrapper> {

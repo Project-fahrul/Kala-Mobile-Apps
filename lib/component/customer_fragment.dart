@@ -38,6 +38,8 @@ class _CustomerFragmentState extends State<CustomerFragment> {
   LoadingWrapperController controllerRegular = LoadingWrapperController();
 
   void createCustomerProspek() async {
+    controller.setError = false;
+    controllerRegular.setError = false;
     CustomerProspekModel d = CustomerProspekModel(
         id: 0,
         alamat: "",
@@ -46,9 +48,9 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         tipeKendaraan: widget.kendaraan.first.tipeKendaraan,
         ulangTahun: DateTime.now(),
         followUp: DateTime.now(),
-        statusProspek: "LOW",
+        statusProspek: "MEDIUM",
         kendaraanSaatIni: "",
-        pengeluaranCustomer: "",
+        pengeluaranCustomer: "0",
         isiPembicaraan: "",
         penghasilanCustomer: "",
         jumlahPertemuan: 0);
@@ -69,7 +71,7 @@ class _CustomerFragmentState extends State<CustomerFragment> {
             tglLahir: d.ulangTahun,
             tglStnk: DateTime.now(),
             totalAngsuran: 0,
-            typeAngsuran: "",
+            typeAngsuran: "Tunai",
             typeKendaraan: d.kendaraanSaatIni);
         await createCustomerRegular(d: regularModel);
       }
@@ -88,16 +90,21 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         useSafeArea: true,
         isScrollControlled: true,
         context: context,
-        builder: (_) => LoadingWrapper(
-            loadingWrapperController: controller,
-            widget: CustomerProspekComp(
-                customerProspekModel: d,
-                kendaraan: widget.kendaraan,
-                controller: controller)));
+        builder: (cx) => Padding(
+              padding: MediaQuery.of(cx).viewInsets,
+              child: LoadingWrapper(
+                  loadingWrapperController: controller,
+                  widget: CustomerProspekComp(false,
+                      customerProspekModel: d,
+                      kendaraan: widget.kendaraan,
+                      controller: controller)),
+            ));
     if (pop && Navigator.canPop(context)) Navigator.pop(context);
   }
 
   void editCustomerProspek(BuildContext ctx, int i) async {
+    controller.setError = false;
+    controllerRegular.setError = false;
     CustomerProspekModel d = widget.customersProspek!.elementAt(i);
     d.customerId = d.id;
     bool pop = false;
@@ -136,16 +143,22 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         useSafeArea: true,
         isScrollControlled: true,
         context: ctx,
-        builder: (_) => LoadingWrapper(
-            loadingWrapperController: controller,
-            widget: CustomerProspekComp(
-              customerProspekModel: d,
-              controller: controller,
-              kendaraan: widget.kendaraan,
-            )));
+        builder: (cx) => Padding(
+              padding: MediaQuery.of(cx).viewInsets,
+              child: LoadingWrapper(
+                  loadingWrapperController: controller,
+                  widget: CustomerProspekComp(
+                    true,
+                    customerProspekModel: d,
+                    controller: controller,
+                    kendaraan: widget.kendaraan,
+                  )),
+            ));
   }
 
   void createCustomerTrust() async {
+    controller.setError = false;
+    controllerRegular.setError = false;
     bool pop = false;
     CustomerTrustModel d = CustomerTrustModel(
         id: 0,
@@ -154,7 +167,7 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         noHp: "",
         jenisKendaraan: widget.kendaraan.first.tipeKendaraan,
         followUp: DateTime.now(),
-        statusProspek: "LOW",
+        statusProspek: "MEDIUM",
         kendaraanSaatIni: "",
         hargaCustomer: "0",
         hargaOlx: "0",
@@ -197,16 +210,21 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         useSafeArea: true,
         isScrollControlled: true,
         context: context,
-        builder: (_) => LoadingWrapper(
-            loadingWrapperController: controller,
-            widget: CustomerTrust(
-                customerTrust: d,
-                kendaraan: widget.kendaraan,
-                controller: controller)));
+        builder: (cx) => Padding(
+              padding: MediaQuery.of(cx).viewInsets,
+              child: LoadingWrapper(
+                  loadingWrapperController: controller,
+                  widget: CustomerTrust(false,
+                      customerTrust: d,
+                      kendaraan: widget.kendaraan,
+                      controller: controller)),
+            ));
     if (pop && Navigator.canPop(context)) Navigator.pop(context);
   }
 
   void editCustomerTrust(BuildContext ctx, int i) async {
+    controller.setError = false;
+    controllerRegular.setError = false;
     CustomerTrustModel d = widget.customerTrust!.elementAt(i);
     d.customerId = d.id;
     bool pop = false;
@@ -245,17 +263,23 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         useSafeArea: true,
         isScrollControlled: true,
         context: ctx,
-        builder: (_) => LoadingWrapper(
-            loadingWrapperController: controller,
-            widget: CustomerTrust(
-              customerTrust: d,
-              controller: controller,
-              kendaraan: widget.kendaraan,
-            )));
+        builder: (cx) => Padding(
+              padding: MediaQuery.of(cx).viewInsets,
+              child: LoadingWrapper(
+                  loadingWrapperController: controller,
+                  widget: CustomerTrust(
+                    true,
+                    customerTrust: d,
+                    controller: controller,
+                    kendaraan: widget.kendaraan,
+                  )),
+            ));
     if (pop && Navigator.canPop(context)) Navigator.pop(context);
   }
 
   Future<bool> createCustomerRegular({CustomerRegularModel? d}) async {
+    controller.setError = false;
+    controllerRegular.setError = false;
     bool pop = d != null;
     late BuildContext dContext;
     d ??= CustomerRegularModel(
@@ -291,19 +315,25 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         context: context,
         builder: (ctx) {
           dContext = context;
-          return LoadingWrapper(
-              loadingWrapperController: controllerRegular,
-              widget: CustomerRegular(
-                customerRegularModel: d!,
-                controller: controllerRegular,
-                token: widget.token,
-              ));
+          return Padding(
+            padding: MediaQuery.of(ctx).viewInsets,
+            child: LoadingWrapper(
+                loadingWrapperController: controllerRegular,
+                widget: CustomerRegular(
+                  false,
+                  customerRegularModel: d!,
+                  controller: controllerRegular,
+                  token: widget.token,
+                )),
+          );
         });
 
     return true;
   }
 
   void editCustomerRegular(BuildContext ctx, int i) async {
+    controller.setError = false;
+    controllerRegular.setError = false;
     CustomerRegularModel d = widget.customerResponse!.elementAt(i);
     d.customerId = d.id;
     controller.setCallback(() async {
@@ -321,13 +351,17 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         useSafeArea: true,
         isScrollControlled: true,
         context: ctx,
-        builder: (_) => LoadingWrapper(
-            loadingWrapperController: controller,
-            widget: CustomerRegular(
-              customerRegularModel: d,
-              controller: controller,
-              token: widget.token,
-            )));
+        builder: (cx) => Padding(
+              padding: MediaQuery.of(cx).viewInsets,
+              child: LoadingWrapper(
+                  loadingWrapperController: controller,
+                  widget: CustomerRegular(
+                    true,
+                    customerRegularModel: d,
+                    controller: controller,
+                    token: widget.token,
+                  )),
+            ));
   }
 
   @override

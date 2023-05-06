@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
   String? messageError;
   TextEditingController passwordController = TextEditingController(text: "");
+  bool rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +96,13 @@ class _LoginPageState extends State<LoginPage> {
                                                 height: 24,
                                                 width: 24,
                                                 child: Checkbox(
-                                                    value: false,
-                                                    onChanged: (_) {})),
+                                                    value: rememberMe,
+                                                    onChanged: (_) {
+                                                      setState(() {
+                                                        rememberMe =
+                                                            !rememberMe;
+                                                      });
+                                                    })),
                                             const Padding(
                                               padding: EdgeInsets.only(left: 8),
                                               child: Text("Ingat saya"),

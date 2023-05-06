@@ -1,4 +1,4 @@
-package com.kalla.app.customer_retention
+package com.kalla.app
 
 import io.flutter.embedding.android.FlutterActivity
 

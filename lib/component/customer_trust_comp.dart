@@ -13,7 +13,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class CustomerTrust extends StatefulWidget {
-  CustomerTrust(
+  CustomerTrust(this.isEdit,
       {super.key,
       required this.kendaraan,
       required this.customerTrust,
@@ -21,6 +21,7 @@ class CustomerTrust extends StatefulWidget {
   CustomerTrustModel customerTrust;
   LoadingWrapperController controller;
   List<KendaraanModel> kendaraan;
+  final bool isEdit;
 
   @override
   State<CustomerTrust> createState() => _CustomerTrustState();
@@ -28,13 +29,37 @@ class CustomerTrust extends StatefulWidget {
 
 class _CustomerTrustState extends State<CustomerTrust> {
   TextEditingController controllerFollowUp = TextEditingController();
-  TextEditingController controllerJumlah = TextEditingController(text: "0");
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+  TextEditingController noHpController = TextEditingController();
+  TextEditingController kendaraanSaatIniController = TextEditingController();
+  TextEditingController tahunController = TextEditingController();
+  TextEditingController pembicaraanController = TextEditingController();
+
+  TextEditingController hargaCustomerController = TextEditingController();
+  TextEditingController hargaTrustController = TextEditingController();
+  TextEditingController hargaOlxController = TextEditingController();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+  final List<String> status = ["MEDIUM", "HOT", "SOLD"];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    nameController.text = widget.customerTrust.name;
+    alamatController.text = widget.customerTrust.alamat;
+    noHpController.text = widget.customerTrust.noHp;
+    kendaraanSaatIniController.text = widget.customerTrust.kendaraanSaatIni;
+    tahunController.text = widget.customerTrust.tahun;
+    pembicaraanController.text = widget.customerTrust.pembicaraan;
+
+    hargaCustomerController.text = widget.customerTrust.hargaCustomer;
+    hargaOlxController.text = widget.customerTrust.hargaOlx;
+    hargaTrustController.text = widget.customerTrust.hargaTrust;
+
     controllerFollowUp.text =
         "${widget.customerTrust.followUp.year}-${widget.customerTrust.followUp.month}-${widget.customerTrust.followUp.day}";
   }
@@ -61,10 +86,37 @@ class _CustomerTrustState extends State<CustomerTrust> {
                     color: Colors.white,
                   ),
                 ),
-                IconButton(
-                    color: Colors.white,
-                    onPressed: widget.controller.getCallback,
-                    icon: const Icon(Icons.save)),
+                Row(
+                  children: [
+                    IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          setState(() {
+                            widget.controller.setError = false;
+                          });
+                          if (widget.customerTrust.name.isEmpty ||
+                              widget.customerTrust.alamat.isEmpty ||
+                              widget.customerTrust.noHp.isEmpty ||
+                              widget.customerTrust.hargaCustomer.isEmpty ||
+                              widget.customerTrust.hargaOlx.isEmpty ||
+                              widget.customerTrust.hargaTrust.isEmpty ||
+                              widget.customerTrust.jenisKendaraan.isEmpty ||
+                              widget.customerTrust.kendaraanSaatIni.isEmpty) {
+                            setState(() {
+                              widget.controller.setError = true;
+                            });
+                            return;
+                          }
+                          widget.controller.getCallback();
+                        },
+                        icon: const Icon(Icons.save)),
+                    if (widget.isEdit)
+                      IconButton(
+                          color: Colors.white,
+                          onPressed: widget.controller.getCallback,
+                          icon: const Icon(Icons.delete)),
+                  ],
+                )
               ],
             )),
         Expanded(
@@ -78,7 +130,7 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.name,
+                  controller: nameController,
                   onChanged: (val) => widget.customerTrust.name = val,
                   decoration: const InputDecoration(
                       labelText: "Nama Customer",
@@ -95,7 +147,7 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.alamat,
+                  controller: alamatController,
                   onChanged: (val) => widget.customerTrust.alamat = val,
                   decoration: const InputDecoration(
                       labelText: "Alamat Customer",
@@ -112,7 +164,7 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.noHp,
+                  controller: noHpController,
                   onChanged: (val) => widget.customerTrust.noHp = val,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -133,11 +185,12 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
+                            initialDate: widget.customerTrust.followUp,
+                            firstDate: DateTime(1945),
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
@@ -185,7 +238,13 @@ class _CustomerTrustState extends State<CustomerTrust> {
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton(
                             isDense: true,
-                            value: widget.customerTrust.jenisKendaraan,
+                            value: widget.kendaraan
+                                    .where((element) =>
+                                        element.tipeKendaraan ==
+                                        widget.customerTrust.jenisKendaraan)
+                                    .isEmpty
+                                ? widget.kendaraan.first.tipeKendaraan
+                                : widget.customerTrust.jenisKendaraan,
                             items: widget.kendaraan
                                 .map((e) => DropdownMenuItem(
                                       child: Text(e.tipeKendaraan),
@@ -227,8 +286,11 @@ class _CustomerTrustState extends State<CustomerTrust> {
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton(
                             isDense: true,
-                            value: widget.customerTrust.statusProspek,
-                            items: ["LOW", "MEDIUM", "HOT", "SOLD"]
+                            value: status.contains(
+                                    widget.customerTrust.statusProspek)
+                                ? widget.customerTrust.statusProspek
+                                : status.first,
+                            items: status
                                 .map((e) => DropdownMenuItem(
                                       child: Text(e),
                                       value: e,
@@ -269,9 +331,12 @@ class _CustomerTrustState extends State<CustomerTrust> {
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton(
                             isDense: true,
-                            value: widget.customerTrust.pembayaran == ""
-                                ? "Tunai"
-                                : widget.customerTrust.pembayaran,
+                            value: ["Tunai", "Kredit"].contains(
+                                    widget.customerTrust.pembayaran == ""
+                                        ? "Tunai"
+                                        : widget.customerTrust.pembayaran)
+                                ? widget.customerTrust.pembayaran
+                                : "Tunai",
                             items: const [
                               DropdownMenuItem(
                                 child: Text("Tunai"),
@@ -313,8 +378,10 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.hargaCustomer,
+                  keyboardType: TextInputType.number,
+                  controller: hargaCustomerController,
                   onChanged: (val) => widget.customerTrust.hargaCustomer = val,
+                  inputFormatters: [_rupiah()],
                   decoration: const InputDecoration(
                       labelText: "Harga customer",
                       focusedBorder: UnderlineInputBorder(
@@ -330,8 +397,10 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.hargaOlx,
+                  keyboardType: TextInputType.number,
+                  controller: hargaOlxController,
                   onChanged: (val) => widget.customerTrust.hargaOlx = val,
+                  inputFormatters: [_rupiah()],
                   decoration: const InputDecoration(
                       labelText: "Harga OLX",
                       focusedBorder: UnderlineInputBorder(
@@ -347,8 +416,10 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.hargaTrust,
+                  keyboardType: TextInputType.number,
+                  controller: hargaTrustController,
                   onChanged: (val) => widget.customerTrust.hargaTrust = val,
+                  inputFormatters: [_rupiah()],
                   decoration: const InputDecoration(
                       labelText: "Harga trust",
                       focusedBorder: UnderlineInputBorder(
@@ -364,7 +435,7 @@ class _CustomerTrustState extends State<CustomerTrust> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerTrust.pembicaraan,
+                  controller: pembicaraanController,
                   onChanged: (val) => widget.customerTrust.pembicaraan = val,
                   decoration: const InputDecoration(
                       labelText: "Pembicaraan",
@@ -386,5 +457,37 @@ class _CustomerTrustState extends State<CustomerTrust> {
         )
       ]),
     );
+  }
+}
+
+class _rupiah extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    print("${oldValue.text} ${newValue.text}");
+    String n = newValue.text;
+    String number_string = n.replaceAll(RegExp(r'([^,\d])'), "");
+    number_string = number_string.replaceAll(RegExp(r'^0+'), "");
+    List<String> split = number_string.split(",");
+    int sisa = split[0].length % 3;
+    String rupiah = split[0].substring(0, sisa);
+    String ribuan = split[0].substring(sisa);
+
+    if (ribuan.length > 0) {
+      String sep = sisa > 0 ? "." : "";
+      rupiah = rupiah + sep;
+      for (int i = 0; i < ribuan.length; i++) {
+        if (i % 3 == 0 && i > 0) rupiah = rupiah + ".";
+        rupiah = rupiah + ribuan.characters.elementAt(i);
+      }
+    }
+    final String fn = "Rp. " + rupiah;
+
+    return rupiah.length > 0
+        ? TextEditingValue(
+            text: fn,
+            selection:
+                TextSelection(baseOffset: fn.length, extentOffset: fn.length))
+        : newValue;
   }
 }

@@ -14,11 +14,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class CustomerProspekComp extends StatefulWidget {
-  CustomerProspekComp(
+  CustomerProspekComp(this.isEdit,
       {super.key,
       required this.kendaraan,
       required this.customerProspekModel,
       required this.controller});
+  final bool isEdit;
   CustomerProspekModel customerProspekModel;
   LoadingWrapperController controller;
   List<KendaraanModel> kendaraan;
@@ -31,12 +32,50 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
   TextEditingController controllerUlangTahun = TextEditingController();
   TextEditingController controllerFollowUp = TextEditingController();
   TextEditingController controllerJumlah = TextEditingController(text: "0");
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+  TextEditingController noHpController = TextEditingController();
+  TextEditingController kendaraanSaatIniController = TextEditingController();
+  TextEditingController pembicaraanController = TextEditingController();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
+  final Map<String, String> pengeluaran = Map.from({
+    "0": "-",
+    "10": "6-10JT",
+    "15": "11-15JT",
+    "20": "16-20JT",
+    "25": "21-25JT",
+    "30": "26-30JT",
+    "31": "30JT Keatas"
+  });
+  final Map<String, String> penghasilan = Map.from({
+    "0": "-",
+    "10": "6-10JT",
+    "15": "11-15JT",
+    "20": "16-20JT",
+    "25": "21-25JT",
+    "30": "26-30JT",
+    "40": "31-40JT",
+    "50": "41-50JT",
+    "51": "50JT Keatas",
+  });
+
+  final List<String> statusProspek = ["MEDIUM", "HOT", "SOLD"];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    nameController.text = widget.customerProspekModel.name;
+    alamatController.text = widget.customerProspekModel.alamat;
+    noHpController.text = widget.customerProspekModel.noHp;
+    kendaraanSaatIniController.text =
+        widget.customerProspekModel.kendaraanSaatIni;
+    pembicaraanController.text = widget.customerProspekModel.isiPembicaraan;
+    controllerJumlah.text =
+        widget.customerProspekModel.jumlahPertemuan.toString();
+
     controllerUlangTahun.text =
         "${widget.customerProspekModel.ulangTahun.year}-${widget.customerProspekModel.ulangTahun.month}-${widget.customerProspekModel.ulangTahun.day}";
     controllerFollowUp.text =
@@ -65,10 +104,37 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
                     color: Colors.white,
                   ),
                 ),
-                IconButton(
-                    color: Colors.white,
-                    onPressed: widget.controller.getCallback,
-                    icon: const Icon(Icons.save)),
+                Row(
+                  children: [
+                    IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          print(widget.customerProspekModel);
+                          setState(() {
+                            widget.controller.setError = false;
+                          });
+                          if (widget.customerProspekModel.alamat.isEmpty ||
+                              widget.customerProspekModel.isiPembicaraan
+                                  .isEmpty ||
+                              widget.customerProspekModel.name.isEmpty ||
+                              widget.customerProspekModel.kendaraanSaatIni
+                                  .isEmpty ||
+                              widget.customerProspekModel.noHp.isEmpty) {
+                            setState(() {
+                              widget.controller.setError = true;
+                            });
+                            return;
+                          }
+                          widget.controller.getCallback();
+                        },
+                        icon: const Icon(Icons.save)),
+                    if (widget.isEdit)
+                      IconButton(
+                          color: Colors.white,
+                          onPressed: widget.controller.getCallback,
+                          icon: const Icon(Icons.delete)),
+                  ],
+                )
               ],
             )),
         Expanded(
@@ -77,12 +143,12 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
               if (widget.controller.error)
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Modal("Kolom harus diisi"),
+                  child: Modal("Cek form. Kolom harus diisi"),
                 ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerProspekModel.name,
+                  controller: nameController,
                   onChanged: (val) => widget.customerProspekModel.name = val,
                   decoration: const InputDecoration(
                       labelText: "Nama Customer",
@@ -99,7 +165,7 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerProspekModel.alamat,
+                  controller: alamatController,
                   onChanged: (val) => widget.customerProspekModel.alamat = val,
                   decoration: const InputDecoration(
                       labelText: "Alamat Customer",
@@ -116,7 +182,7 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
-                  initialValue: widget.customerProspekModel.noHp,
+                  controller: noHpController,
                   onChanged: (val) => widget.customerProspekModel.noHp = val,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -137,11 +203,12 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
+                            initialDate: widget.customerProspekModel.ulangTahun,
+                            firstDate: DateTime(1945),
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
@@ -168,11 +235,12 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
                 child: TextFormField(
+                  keyboardType: TextInputType.none,
                   onTap: () => {
                     showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
+                            initialDate: widget.customerProspekModel.followUp,
+                            firstDate: DateTime(1945),
                             lastDate: DateTime(2090))
                         .then((value) {
                       if (value != null) {
@@ -269,8 +337,11 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
                           child: DropdownButtonHideUnderline(
                               child: DropdownButton(
                             isDense: true,
-                            value: widget.customerProspekModel.statusProspek,
-                            items: ["LOW", "MEDIUM", "HOT", "SOLD"]
+                            value: statusProspek.contains(
+                                    widget.customerProspekModel.statusProspek)
+                                ? widget.customerProspekModel.statusProspek
+                                : statusProspek.first,
+                            items: statusProspek
                                 .map((e) => DropdownMenuItem(
                                       child: Text(e),
                                       value: e,
@@ -328,7 +399,7 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerProspekModel.kendaraanSaatIni,
+                  controller: kendaraanSaatIniController,
                   onChanged: (val) =>
                       widget.customerProspekModel.kendaraanSaatIni = val,
                   decoration: const InputDecoration(
@@ -344,45 +415,101 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: TextFormField(
-                  initialValue: widget.customerProspekModel.pengeluaranCustomer,
-                  onChanged: (val) =>
-                      widget.customerProspekModel.pengeluaranCustomer = val,
-                  decoration: const InputDecoration(
-                      labelText: "Pengeluaran customer",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132))),
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132)))),
-                ),
-              ),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                        border:
+                            Border(bottom: BorderSide(color: Colors.black38))),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Pengeluaran customer",
+                          style: TextStyle(color: Colors.black38, fontSize: 12),
+                        ),
+                        Divider(
+                          height: 3,
+                          color: Colors.transparent,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                            isDense: true,
+                            value: pengeluaran.containsKey(widget
+                                    .customerProspekModel.pengeluaranCustomer)
+                                ? widget
+                                    .customerProspekModel.pengeluaranCustomer
+                                : pengeluaran.keys.first,
+                            items: pengeluaran.keys
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(pengeluaran[e]!),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            onChanged: (d) {
+                              setState(() {
+                                widget.customerProspekModel
+                                    .pengeluaranCustomer = d.toString();
+                              });
+                            },
+                          )),
+                        ),
+                      ],
+                    ),
+                  )),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                        border:
+                            Border(bottom: BorderSide(color: Colors.black38))),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Penghasilan customer",
+                          style: TextStyle(color: Colors.black38, fontSize: 12),
+                        ),
+                        Divider(
+                          height: 3,
+                          color: Colors.transparent,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                            isDense: true,
+                            value: penghasilan.containsKey(widget
+                                    .customerProspekModel.penghasilanCustomer)
+                                ? widget
+                                    .customerProspekModel.penghasilanCustomer
+                                : penghasilan.keys.first,
+                            items: penghasilan.keys
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(penghasilan[e]!),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            onChanged: (d) {
+                              setState(() {
+                                widget.customerProspekModel
+                                    .penghasilanCustomer = d.toString();
+                              });
+                            },
+                          )),
+                        ),
+                      ],
+                    ),
+                  )),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: TextFormField(
-                  initialValue: widget.customerProspekModel.penghasilanCustomer,
-                  onChanged: (val) =>
-                      widget.customerProspekModel.penghasilanCustomer = val,
-                  decoration: const InputDecoration(
-                      labelText: "Penghasilan customer",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132))),
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 131, 133, 132)),
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 131, 133, 132)))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: TextFormField(
-                  initialValue: widget.customerProspekModel.isiPembicaraan,
+                  controller: pembicaraanController,
                   onChanged: (val) =>
                       widget.customerProspekModel.isiPembicaraan = val,
                   decoration: const InputDecoration(
