@@ -82,9 +82,10 @@ class _CustomerFragmentState extends State<CustomerFragment> {
       List<CustomerProspekModel> list =
           (await CustomerApi.getCustomerProspek(widget.token)).data;
       setState(() {
-        widget.customersProspek = list;
+        widget.customersProspek!.clear();
+        widget.customersProspek!.addAll(list);
       });
-      if (pop && Navigator.canPop(context)) Navigator.pop(context);
+      if (Navigator.canPop(context)) Navigator.pop(context);
     });
     await showModalBottomSheet(
         useSafeArea: true,
@@ -108,6 +109,37 @@ class _CustomerFragmentState extends State<CustomerFragment> {
     CustomerProspekModel d = widget.customersProspek!.elementAt(i);
     d.customerId = d.id;
     bool pop = false;
+    controller.setDeleteCallback = (int id) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                      child: Text("Tidak")),
+                  TextButton(
+                      onPressed: () async {
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                        controller.setLoading(true);
+                        await CustomerApi.deleteCustomerProspek(
+                            id, widget.token);
+                        List<CustomerProspekModel> list =
+                            (await CustomerApi.getCustomerProspek(widget.token))
+                                .data;
+                        setState(() {
+                          widget.customersProspek = list;
+                        });
+                        controller.setLoading(false);
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                      child: Text("Ya")),
+                ],
+                title: Text("Konfirmasi"),
+                content: Text("Yakin ingin menghapus?"),
+              ));
+    };
     controller.setCallback(() async {
       if (d.statusProspek == "SOLD") {
         pop = true;
@@ -135,9 +167,10 @@ class _CustomerFragmentState extends State<CustomerFragment> {
       List<CustomerProspekModel> list =
           (await CustomerApi.getCustomerProspek(widget.token)).data;
       setState(() {
-        widget.customersProspek = list;
+        widget.customersProspek!.clear();
+        widget.customersProspek!.addAll(list);
       });
-      if (pop && Navigator.canPop(context)) Navigator.pop(context);
+      if (Navigator.canPop(context)) Navigator.pop(context);
     });
     await showModalBottomSheet(
         useSafeArea: true,
@@ -202,9 +235,10 @@ class _CustomerFragmentState extends State<CustomerFragment> {
       List<CustomerTrustModel> list =
           (await CustomerApi.getCustomerTrust(widget.token)).data;
       setState(() {
-        widget.customerTrust = list;
+        widget.customerTrust!.clear();
+        widget.customerTrust!.addAll(list);
       });
-      if (pop && Navigator.canPop(context)) Navigator.pop(context);
+      if (Navigator.canPop(context)) Navigator.pop(context);
     });
     await showModalBottomSheet(
         useSafeArea: true,
@@ -228,6 +262,36 @@ class _CustomerFragmentState extends State<CustomerFragment> {
     CustomerTrustModel d = widget.customerTrust!.elementAt(i);
     d.customerId = d.id;
     bool pop = false;
+    controller.setDeleteCallback = (int id) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                      child: Text("Tidak")),
+                  TextButton(
+                      onPressed: () async {
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                        controller.setLoading(true);
+                        await CustomerApi.deleteCustomerTrust(id, widget.token);
+                        List<CustomerTrustModel> list =
+                            (await CustomerApi.getCustomerTrust(widget.token))
+                                .data;
+                        setState(() {
+                          widget.customerTrust = list;
+                        });
+                        controller.setLoading(false);
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                      child: Text("Ya")),
+                ],
+                title: Text("Konfirmasi"),
+                content: Text("Yakin ingin menghapus?"),
+              ));
+    };
     controller.setCallback(() async {
       if (d.statusProspek == "SOLD") {
         pop = true;
@@ -255,9 +319,10 @@ class _CustomerFragmentState extends State<CustomerFragment> {
       List<CustomerTrustModel> list =
           (await CustomerApi.getCustomerTrust(widget.token)).data;
       setState(() {
-        widget.customerTrust = list;
+        widget.customerTrust!.clear();
+        widget.customerTrust!.addAll(list);
       });
-      if (pop && Navigator.canPop(context)) Navigator.pop(context);
+      if (Navigator.canPop(context)) Navigator.pop(context);
     });
     await showModalBottomSheet(
         useSafeArea: true,
@@ -305,9 +370,10 @@ class _CustomerFragmentState extends State<CustomerFragment> {
       List<CustomerRegularModel> list =
           (await CustomerApi.getCustomerRegular(widget.token)).data;
       setState(() {
-        widget.customerResponse = list;
+        widget.customerResponse!.clear();
+        widget.customerResponse!.addAll(list);
       });
-      if (pop && Navigator.canPop(dContext)) Navigator.pop(dContext);
+      if (Navigator.canPop(dContext)) Navigator.pop(dContext);
     });
     await showModalBottomSheet(
         useSafeArea: true,
@@ -336,16 +402,49 @@ class _CustomerFragmentState extends State<CustomerFragment> {
     controllerRegular.setError = false;
     CustomerRegularModel d = widget.customerResponse!.elementAt(i);
     d.customerId = d.id;
-    controller.setCallback(() async {
-      controller.setLoading(true);
+    controllerRegular.setDeleteCallback = (int id) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                      child: Text("Tidak")),
+                  TextButton(
+                      onPressed: () async {
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                        controllerRegular.setLoading(true);
+                        await CustomerApi.deleteCustomerRegular(
+                            id, widget.token);
+                        List<CustomerRegularModel> list =
+                            (await CustomerApi.getCustomerRegular(widget.token))
+                                .data;
+                        setState(() {
+                          widget.customerResponse = list;
+                        });
+                        controllerRegular.setLoading(false);
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                      child: Text("Ya")),
+                ],
+                title: Text("Konfirmasi"),
+                content: Text("Yakin ingin menghapus?"),
+              ));
+    };
+    controllerRegular.setCallback(() async {
+      controllerRegular.setLoading(true);
       print("edit save regular");
       bool res = await CustomerApi.editCustomerRegular(widget.token, d);
-      controller.setLoading(false);
+      controllerRegular.setLoading(false);
       List<CustomerRegularModel> list =
           (await CustomerApi.getCustomerRegular(widget.token)).data;
       setState(() {
-        widget.customerResponse = list;
+        widget.customerResponse!.clear();
+        widget.customerResponse!.addAll(list);
       });
+      if (Navigator.canPop(context)) Navigator.pop(context);
     });
     await showModalBottomSheet(
         useSafeArea: true,
@@ -354,11 +453,11 @@ class _CustomerFragmentState extends State<CustomerFragment> {
         builder: (cx) => Padding(
               padding: MediaQuery.of(cx).viewInsets,
               child: LoadingWrapper(
-                  loadingWrapperController: controller,
+                  loadingWrapperController: controllerRegular,
                   widget: CustomerRegular(
                     true,
                     customerRegularModel: d,
-                    controller: controller,
+                    controller: controllerRegular,
                     token: widget.token,
                   )),
             ));

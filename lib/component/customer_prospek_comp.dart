@@ -131,7 +131,8 @@ class _CustomerProspekCompState extends State<CustomerProspekComp> {
                     if (widget.isEdit)
                       IconButton(
                           color: Colors.white,
-                          onPressed: widget.controller.getCallback,
+                          onPressed: () => widget.controller.getDeleteCallback(
+                              widget.customerProspekModel.id),
                           icon: const Icon(Icons.delete)),
                   ],
                 )

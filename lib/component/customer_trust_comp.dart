@@ -113,7 +113,8 @@ class _CustomerTrustState extends State<CustomerTrust> {
                     if (widget.isEdit)
                       IconButton(
                           color: Colors.white,
-                          onPressed: widget.controller.getCallback,
+                          onPressed: () => widget.controller
+                              .getDeleteCallback(widget.customerTrust.id),
                           icon: const Icon(Icons.delete)),
                   ],
                 )

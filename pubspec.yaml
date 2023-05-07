@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.18.1
   flutter_local_notifications: ^13.0.0
   android_alarm_manager_plus: ^2.1.2
+  in_app_update: ^4.0.1
 
 dev_dependencies:
   flutter_test:

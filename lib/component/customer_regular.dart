@@ -117,7 +117,8 @@ class _CustomerRegularState extends State<CustomerRegular> {
                     if (widget.isEdit)
                       IconButton(
                           color: Colors.white,
-                          onPressed: widget.controller.getCallback,
+                          onPressed: () => widget.controller.getDeleteCallback(
+                              widget.customerRegularModel.id),
                           icon: const Icon(Icons.delete)),
                   ],
                 )

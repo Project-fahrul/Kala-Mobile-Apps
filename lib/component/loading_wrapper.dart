@@ -14,7 +14,7 @@ class LoadingWrapper extends StatefulWidget {
 class LoadingWrapperController {
   LoadingWrapperController({this.listener});
   bool _load = false, _error = false;
-  Function? listener, _callback;
+  Function? listener, _callback, _deleteCallback;
 
   void toggleLoading() {
     _load = !_load;
@@ -29,6 +29,9 @@ class LoadingWrapperController {
       listener!.call();
     }
   }
+
+  void set setDeleteCallback(c) => _deleteCallback = c;
+  get getDeleteCallback => _deleteCallback;
 
   void setCallback(c) => _callback = c;
   get getCallback => _callback;

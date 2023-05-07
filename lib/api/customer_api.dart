@@ -164,4 +164,46 @@ class CustomerApi {
     throw RestException(
         ErrorResponse.fromJson(jsonDecode(response.body)), response.statusCode);
   }
+
+  static Future<bool> deleteCustomerProspek(int id, String token) async {
+    final response = await http.delete(
+        Uri.parse("${Constant.baseUrl}/api/customer_prospek?customerId=$id"),
+        headers: <String, String>{
+          Constant.Media_Content_Type: Constant.Media_Type_JSON,
+          Constant.AUTHENTICATION: token
+        });
+    print(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> deleteCustomerTrust(int id, String token) async {
+    final response = await http.delete(
+        Uri.parse("${Constant.baseUrl}/api/customer_trust?customerId=$id"),
+        headers: <String, String>{
+          Constant.Media_Content_Type: Constant.Media_Type_JSON,
+          Constant.AUTHENTICATION: token
+        });
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> deleteCustomerRegular(int id, String token) async {
+    final response = await http.delete(
+        Uri.parse("${Constant.baseUrl}/api/customer_regular?customerId=$id"),
+        headers: <String, String>{
+          Constant.Media_Content_Type: Constant.Media_Type_JSON,
+          Constant.AUTHENTICATION: token
+        });
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }

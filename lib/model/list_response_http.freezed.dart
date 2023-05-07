@@ -22,6 +22,7 @@ ListResponse<T> _$ListResponseFromJson<T>(
 /// @nodoc
 mixin _$ListResponse<T> {
   List<T> get data => throw _privateConstructorUsedError;
+  set data(List<T> value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson(Object? Function(T) toJsonT) =>
       throw _privateConstructorUsedError;
@@ -89,7 +90,7 @@ class __$$_ListResponseCopyWithImpl<T, $Res>
   }) {
     return _then(_$_ListResponse<T>(
       data: null == data
-          ? _value._data
+          ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as List<T>,
     ));
@@ -99,37 +100,19 @@ class __$$_ListResponseCopyWithImpl<T, $Res>
 /// @nodoc
 @JsonSerializable(genericArgumentFactories: true)
 class _$_ListResponse<T> implements _ListResponse<T> {
-  _$_ListResponse({required final List<T> data}) : _data = data;
+  _$_ListResponse({required this.data});
 
   factory _$_ListResponse.fromJson(
           Map<String, dynamic> json, T Function(Object?) fromJsonT) =>
       _$$_ListResponseFromJson(json, fromJsonT);
 
-  final List<T> _data;
   @override
-  List<T> get data {
-    if (_data is EqualUnmodifiableListView) return _data;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_data);
-  }
+  List<T> data;
 
   @override
   String toString() {
     return 'ListResponse<$T>(data: $data)';
   }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_ListResponse<T> &&
-            const DeepCollectionEquality().equals(other._data, _data));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_data));
 
   @JsonKey(ignore: true)
   @override
@@ -144,7 +127,7 @@ class _$_ListResponse<T> implements _ListResponse<T> {
 }
 
 abstract class _ListResponse<T> implements ListResponse<T> {
-  factory _ListResponse({required final List<T> data}) = _$_ListResponse<T>;
+  factory _ListResponse({required List<T> data}) = _$_ListResponse<T>;
 
   factory _ListResponse.fromJson(
           Map<String, dynamic> json, T Function(Object?) fromJsonT) =
@@ -152,6 +135,7 @@ abstract class _ListResponse<T> implements ListResponse<T> {
 
   @override
   List<T> get data;
+  set data(List<T> value);
   @override
   @JsonKey(ignore: true)
   _$$_ListResponseCopyWith<T, _$_ListResponse<T>> get copyWith =>

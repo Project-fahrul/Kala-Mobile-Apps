@@ -120,7 +120,7 @@ class KallaApp extends StatelessWidget {
           case "/confirm_token":
             return MaterialPageRoute(builder: (_) => const ConfirmToken());
           default:
-            return MaterialPageRoute(builder: (_) => const SplashScreen());
+            return MaterialPageRoute(builder: (_) => SplashScreen());
         }
       },
       home: const KallaAppTheme(),
@@ -138,6 +138,6 @@ class KallaAppTheme extends StatefulWidget {
 class _KallaAppThemeState extends State<KallaAppTheme> {
   @override
   Widget build(BuildContext context) {
-    return const SplashScreen();
+    return SplashScreen();
   }
 }
